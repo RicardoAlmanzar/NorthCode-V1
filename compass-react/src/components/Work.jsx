@@ -254,6 +254,7 @@ function ProjectModal({ project, isOpen, onClose }) {
 /* ─── Work Section ─── */
 export default function Work() {
   const [modalData, setModalData] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const containerRef = useRef(null);
 
   // Debug visibility
@@ -281,14 +282,16 @@ export default function Work() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 max-md:grid-cols-1 gap-5 max-w-[1100px] mx-auto">
+        <div className="grid grid-cols-2 max-md:grid-cols-1 gap-6 max-w-[1100px] mx-auto">
           {PROJECTS.map((proj, i) => (
             <article
               key={i}
-              className="rounded-lg overflow-hidden relative cursor-pointer shadow-sm border border-transparent transition-all duration-300 hover:shadow-[var(--shadow-hover)] hover:border-[rgba(232,97,74,.15)] hover:-translate-y-1.5 group"
+              className={`rounded-lg overflow-hidden relative cursor-pointer shadow-sm border border-transparent transition-all duration-300 hover:shadow-[var(--shadow-hover)] hover:border-[rgba(232,97,74,.15)] hover:-translate-y-1.5 group ${hoveredIndex !== null && hoveredIndex !== i ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100'}`}
               tabIndex={0}
               role="button"
               aria-label={`Ver detalle: ${proj.title}`}
+              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseLeave={() => setHoveredIndex(null)}
               onClick={() => open(proj, i)}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(proj, i); } }}
             >
