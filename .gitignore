@@ -1,1 +1,4 @@
 *.rar
+node_modules/
+dist/
+.vercel/
