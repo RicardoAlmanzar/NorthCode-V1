@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node -e \"if (process.platform !== 'win32') require('fs').chmodSync('node_modules/.bin/vite', 0o755)\"",
     "build": "node ./node_modules/vite/bin/vite.js build",
     "preview": "node ./node_modules/vite/bin/vite.js preview"
   },
@@ -12,6 +13,9 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "date-fns": "^4.1.0",
     "react": "^19.2.4",
