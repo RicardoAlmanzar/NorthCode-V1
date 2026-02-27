@@ -3,7 +3,11 @@
   "scripts": {
     "dev": "npm --prefix compass-react run dev",
     "build": "npm --prefix compass-react run build",
-    "preview": "npm --prefix compass-react run preview",
-    "vercel-build": "npm --prefix compass-react ci && npm --prefix compass-react run build"
+    "preview": "wrangler dev",
+    "vercel-build": "npm --prefix compass-react ci && npm --prefix compass-react run build",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.69.0"
   }
 }
