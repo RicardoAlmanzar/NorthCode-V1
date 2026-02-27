@@ -222,8 +222,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Hero Visual — Compass area */}
-      <div className="relative z-[1] flex flex-col items-center justify-center animate-[scaleIn_.8s_cubic-bezier(.2,.8,.2,1)_.7s_both] max-md:hidden" aria-hidden="true">
+      {/* Hero Visual — Compass area (desktop) */}
+      <div className="relative z-[1] flex flex-col items-center justify-center animate-[scaleIn_.8s_cubic-bezier(.2,.8,.2,1)_.7s_both] hidden md:flex" aria-hidden="true">
         {/* Compass container */}
         <div className="relative w-[clamp(300px,28vw,440px)] aspect-square">
 
@@ -232,6 +232,28 @@ export default function Hero() {
             <CompassRose id="ghost" />
           </div>
 
+          {/* Mobile compass (small) — visible only on small screens */}
+          <div className="relative z-[1] flex items-center justify-center md:hidden pt-6" aria-hidden="true">
+            <div className="relative w-28 h-28">
+              <div className="absolute inset-0 opacity-30 scale-[.9] -translate-y-1">
+                <CompassRose id="ghost-mobile" className="w-full h-full" />
+              </div>
+              <div className="relative w-full h-full flex items-center justify-center">
+                <div
+                  ref={compassRef}
+                  className="hero-compass-main w-full h-full"
+                  onClick={handleCompassClick}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Girar brújula"
+                  onKeyDown={e => e.key === 'Enter' && handleCompassClick()}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <CompassRose id="main-mobile" className="w-full h-full" />
+                </div>
+              </div>
+            </div>
+          </div>
           {/* Main compass — float wrapper + spin on click */}
           <div className="relative hero-compass-float">
             <div

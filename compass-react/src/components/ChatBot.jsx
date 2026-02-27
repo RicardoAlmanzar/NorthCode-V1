@@ -173,7 +173,7 @@ export default function ChatBot() {
       {/* ── Floating Bubble ── */}
       <button
         onClick={() => setOpen(true)}
-        className={`chatbot-fab ${open ? 'chatbot-fab-hidden' : ''}`}
+        className={`chatbot-fab fixed z-[95] bottom-6 right-6 max-md:bottom-5 max-md:right-5 w-12 h-12 md:w-14 md:h-14 ${open ? 'chatbot-fab-hidden' : ''}`}
         aria-label="Abrir chat de asistencia"
         type="button"
       >
