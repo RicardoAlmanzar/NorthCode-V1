@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompassAgency — Diseño Web &amp; Branding</title>
+<meta name="description" content="Agencia de diseño web, branding y contenido visual en Santo Domingo. Sitios web, identidades de marca y producción audiovisual.">
+<meta name="theme-color" content="#0d1b2a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui.motion.css">
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS & RESET
+═══════════════════════════════════════ */
+:root {
+  /* Colors — identity preserved */
+  --ink:       #0d1b2a;
+  --cream:     #f0f4f8;
+  --coral:     #e8614a;
+  --coral-lt:  #f4a899;
+  --navy:      #1a3a5c;
+  --muted:     #4a5d6f;       /* ↑ contrast-safe (was #5a6e82) */
+  --card-bg:   #f8fbff;
+  --border:    rgba(13,27,42,.10);
+  --white:     #ffffff;
+
+  /* Spacing scale (8px base) */
+  --sp-1: .25rem;  /* 4px  */
+  --sp-2: .5rem;   /* 8px  */
+  --sp-3: .75rem;  /* 12px */
+  --sp-4: 1rem;    /* 16px */
+  --sp-5: 1.5rem;  /* 24px */
+  --sp-6: 2rem;    /* 32px */
+  --sp-7: 3rem;    /* 48px */
+  --sp-8: 4rem;    /* 64px */
+  --sp-9: 5rem;    /* 80px */
+  --sp-10: 6rem;   /* 96px */
+
+  /* Consistent radii */
+  --radius-sm: .5rem;
+  --radius-md: .75rem;
+  --radius-lg: 1rem;
+  --radius-pill: 2rem;
+
+  /* Shadows — 2-tier system */
+  --shadow-sm: 0 2px 8px rgba(13,27,42,.06);
+  --shadow-md: 0 8px 24px rgba(13,27,42,.10);
+  --shadow-hover: 0 12px 32px rgba(13,27,42,.14);
+
+  /* Min touch target */
+  --touch-min: 44px;
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+/* Scroll offset = nav height + breathing room */
+:root { --nav-h: 80px; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+}
+/* Respect reduced-motion: disable smooth scroll at OS level */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+/* Belt-and-suspenders: each section also gets scroll-margin */
+section[id] { scroll-margin-top: var(--nav-h); }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { display: block; max-width: 100%; }
+
+/* ═══════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════ */
+h1, h2, h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 900;
+  line-height: 1.15;
+}
+h1 { font-size: clamp(2.4rem, 4.5vw, 4.2rem); margin-bottom: var(--sp-5); }
+h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); margin-bottom: var(--sp-4); }
+h1 em, h2 em { font-style: italic; color: var(--coral); }
+
+/* ═══════════════════════════════════════
+   NAV — sticky, no layout-shift
+═══════════════════════════════════════ */
+.nav-spacer { height: 72px; } /* prevents CLS when nav becomes fixed */
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--sp-4) var(--sp-8);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background var(--dur-short, 220ms) var(--ease-out, ease),
+    border-color var(--dur-short, 220ms) var(--ease-out, ease),
+    backdrop-filter var(--dur-short, 220ms) var(--ease-out, ease);
+}
+nav.scrolled {
+  background: rgba(240,244,248,.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: var(--border);
+}
+
+/* Hamburger button */
+.nav-hamburger {
+  display: none;
+  width: 44px; height: 44px;
+  border: none; background: none;
+  cursor: pointer; padding: 0;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--ink); border-radius: 2px;
+  transition: transform .25s ease, opacity .25s ease;
+}
+.nav-hamburger[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-hamburger[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.nav-hamburger[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 700;
+  letter-spacing: .01em;
+  text-decoration: none; color: var(--ink);
+}
+.logo span { color: var(--coral); }
+
+nav ul {
+  list-style: none;
+  display: flex; gap: var(--sp-6);
+}
+nav ul a {
+  position: relative;
+  text-decoration: none; color: var(--ink);
+  font-size: .82rem; font-weight: 500;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: var(--sp-2) 0;
+  min-height: var(--touch-min);
+  display: inline-flex; align-items: center;
+  transition: color var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+nav ul a::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--coral);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-short, 220ms) var(--ease-out, ease);
+}
+nav ul a:hover,
+nav ul a[aria-current="true"] { color: var(--coral); }
+nav ul a:hover::after,
+nav ul a[aria-current="true"]::after { transform: scaleX(1); }
+
+.nav-cta {
+  background: var(--coral); color: var(--white);
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-pill);
+  font-size: .82rem; font-weight: 600;
+  text-decoration: none;
+  letter-spacing: .04em; text-transform: uppercase;
+  min-height: var(--touch-min);
+  display: inline-flex; align-items: center;
+  box-shadow: 0 4px 16px rgba(232,97,74,.25);
+  transition:
+    transform var(--dur-micro, 160ms) var(--ease-out, ease),
+    box-shadow var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.nav-cta:hover  { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,97,74,.35); }
+.nav-cta:active { transform: translateY(0) scale(.98); transition-duration: 80ms; }
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero {
+  min-height: 100vh; min-height: 100dvh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: var(--sp-10) var(--sp-8) var(--sp-8);
+  gap: var(--sp-8);
+  position: relative; overflow: hidden;
+}
+.hero-mesh {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 55% 60% at 78% 38%, rgba(232,97,74,.10) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 50% at 20% 78%, rgba(26,58,92,.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-text { position: relative; z-index: 1; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: var(--sp-3);
+  font-size: .78rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: var(--sp-6);
+  opacity: 0; animation: fadeIn var(--dur-long, 420ms) var(--ease-out, ease) .3s forwards;
+}
+.hero-eyebrow::before {
+  content: ''; display: block;
+  width: 1.5rem; height: 1px; background: var(--coral);
+}
+
+h1 .line { display: block; overflow: hidden; }
+h1 .line span {
+  display: block;
+  transform: translateY(105%);
+  animation: lineReveal .6s var(--ease-out, ease) forwards;
+}
+h1 .line:nth-child(1) span { animation-delay: .5s; }
+h1 .line:nth-child(2) span { animation-delay: .62s; }
+h1 .line:nth-child(3) span { animation-delay: .74s; }
+@keyframes lineReveal { to { transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
+
+.hero-sub {
+  color: var(--muted); font-size: 1.05rem; line-height: 1.75;
+  max-width: 44ch; margin-bottom: var(--sp-7);
+  opacity: 0; animation: fadeUp var(--dur-long, 420ms) var(--ease-out, ease) 1s forwards;
+}
+.btn-group {
+  display: flex; gap: var(--sp-4); align-items: center; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp var(--dur-long, 420ms) var(--ease-out, ease) 1.15s forwards;
+}
+
+/* Buttons — shared base */
+.btn-primary, .btn-outline {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--touch-min);
+  padding: var(--sp-3) var(--sp-6);
+  border-radius: var(--radius-pill);
+  font-size: .9rem; font-weight: 500;
+  letter-spacing: .03em;
+  text-decoration: none; border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition:
+    transform var(--dur-micro, 160ms) var(--ease-out, ease),
+    box-shadow var(--dur-micro, 160ms) var(--ease-out, ease),
+    background var(--dur-micro, 160ms) var(--ease-out, ease),
+    color var(--dur-micro, 160ms) var(--ease-out, ease),
+    border-color var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.btn-primary {
+  background: var(--coral); color: var(--white);
+  border: 2px solid var(--coral);
+  box-shadow: 0 4px 16px rgba(232,97,74,.20);
+}
+.btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,97,74,.30); }
+.btn-primary:active { transform: translateY(0) scale(.98); transition-duration: 80ms; }
+
+.btn-outline {
+  border: 2px solid var(--ink); color: var(--ink);
+  background: transparent;
+}
+.btn-outline:hover  { background: var(--ink); color: var(--white); transform: translateY(-2px); }
+.btn-outline:active { transform: translateY(0) scale(.98); transition-duration: 80ms; }
+
+/* HERO VISUAL — project cards */
+.hero-visual {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4);
+  opacity: 0; animation: fadeIn var(--dur-long, 420ms) var(--ease-out, ease) .8s forwards;
+}
+.hero-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform  var(--dur-micro, 160ms) var(--ease-out, ease),
+    box-shadow var(--dur-micro, 160ms) var(--ease-out, ease),
+    border-color var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.hero-card:hover {
+  transform: translateY(calc(-1 * var(--move-sm, 4px)));
+  box-shadow: var(--shadow-md);
+  border-color: rgba(232,97,74,.2);
+}
+.hero-card-img {
+  width: 100%; aspect-ratio: 4/3;
+  position: relative; overflow: hidden;
+}
+.hero-card-img::after {
+  content: attr(data-label);
+  position: absolute; bottom: var(--sp-2); left: var(--sp-2);
+  background: var(--ink); color: var(--white);
+  font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--radius-sm);
+}
+.hero-card:nth-child(1) .hero-card-img { background: linear-gradient(135deg,#b8c8d8,#c5d5e5); }
+.hero-card:nth-child(2) .hero-card-img { background: linear-gradient(135deg,#e8a090,#f0b8a8); margin-top: var(--sp-6); }
+.hero-card:nth-child(3) .hero-card-img { background: linear-gradient(135deg,#9ab5cc,#b5cad8); margin-top: calc(-1 * var(--sp-6)); }
+.hero-card:nth-child(4) .hero-card-img { background: linear-gradient(135deg,#e89585,#f0a898); }
+.hero-card-body { padding: var(--sp-3) var(--sp-4); }
+.hero-card-title { font-size: .82rem; font-weight: 500; }
+.hero-card-tag { font-size: .72rem; color: var(--muted); margin-top: var(--sp-1); }
+
+/* ═══════════════════════════════════════
+   SECTIONS — common
+═══════════════════════════════════════ */
+section { padding: var(--sp-10) var(--sp-8); }
+
+.section-eyebrow {
+  display: flex; align-items: center; gap: var(--sp-3);
+  font-size: .75rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: var(--sp-4);
+}
+.section-eyebrow::before {
+  content: ''; display: block;
+  width: 1.5rem; height: 1px; background: var(--coral);
+}
+
+.section-lead {
+  color: var(--muted); max-width: 56ch;
+  line-height: 1.75; margin-bottom: var(--sp-7);
+  font-size: 1rem;
+}
+
+/* ═══════════════════════════════════════
+   WORK — Project grid
+═══════════════════════════════════════ */
+#work { background: var(--card-bg); }
+
+.work-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: var(--sp-7);
+}
+.work-link {
+  color: var(--coral); text-decoration: none;
+  font-size: .85rem; font-weight: 500;
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  min-height: var(--touch-min);
+  transition: gap var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.work-link:hover { gap: var(--sp-3); }
+
+.work-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--sp-5);
+}
+.work-item {
+  border-radius: var(--radius-md); overflow: hidden;
+  position: relative; cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid transparent;
+  transition:
+    box-shadow var(--dur-micro, 160ms) var(--ease-out, ease),
+    border-color var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.work-item:hover,
+.work-item:focus-within {
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(232,97,74,.15);
+}
+.work-thumb {
+  width: 100%; aspect-ratio: 4/3;
+  transition: transform var(--dur-medium, 320ms) var(--ease-out, ease);
+}
+.work-item:hover .work-thumb { transform: scale(1.03); }
+.work-item:nth-child(1) .work-thumb { aspect-ratio: 3/4; background: linear-gradient(135deg,#b5c8d8,#ccd8e8); }
+.work-item:nth-child(2) .work-thumb { background: linear-gradient(135deg,#e8a090,#f2b5a5); }
+.work-item:nth-child(3) .work-thumb { background: linear-gradient(135deg,#8fb2c8,#a8c5d5); }
+.work-item:nth-child(4) .work-thumb { background: linear-gradient(135deg,#e89080,#f2a895); }
+
+.work-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(13,27,42,.8) 0%, transparent 55%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: var(--sp-5);
+  opacity: 0;
+  transition: opacity var(--dur-short, 220ms) var(--ease-out, ease);
+  color: var(--white);
+}
+.work-item:hover .work-overlay,
+.work-item:focus-within .work-overlay { opacity: 1; }
+
+.work-overlay-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; }
+.work-overlay-tag {
+  font-size: .72rem; color: var(--coral-lt); margin-top: var(--sp-1);
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.work-meta { padding: var(--sp-3) var(--sp-4); background: var(--cream); }
+.work-meta-title { font-size: .85rem; font-weight: 500; }
+.work-meta-sub { font-size: .75rem; color: var(--muted); margin-top: var(--sp-1); }
+
+
+
+/* ═══════════════════════════════════════
+   SERVICES — dark section with tabs
+═══════════════════════════════════════ */
+#services { background: var(--ink); color: var(--white); }
+#services .section-eyebrow { color: var(--coral-lt); }
+#services .section-eyebrow::before { background: var(--coral-lt); }
+#services h2 { color: var(--white); }
+#services .section-lead { color: rgba(240,244,248,.55); }
+
+/* Tab buttons */
+.services-tabs {
+  display: flex; gap: var(--sp-2); margin-bottom: var(--sp-7);
+  flex-wrap: wrap;
+}
+.services-tabs [role="tab"] {
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--radius-pill);
+  font-size: .8rem; font-weight: 500;
+  letter-spacing: .04em; text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid rgba(240,244,248,.18);
+  color: rgba(240,244,248,.5);
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  min-height: var(--touch-min);
+  transition:
+    background var(--dur-micro, 160ms) var(--ease-out, ease),
+    border-color var(--dur-micro, 160ms) var(--ease-out, ease),
+    color var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.services-tabs [role="tab"]:hover {
+  border-color: rgba(240,244,248,.4);
+  color: var(--white);
+}
+.services-tabs [role="tab"][aria-selected="true"] {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: var(--white);
+}
+
+/* Tab panels */
+.services-panels { position: relative; }
+
+.services-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-5);
+}
+.service-card {
+  border: 1px solid rgba(240,244,248,.08);
+  border-radius: var(--radius-md);
+  padding: 0;
+  overflow: hidden;
+  transition:
+    border-color var(--dur-micro, 160ms) var(--ease-out, ease),
+    background var(--dur-micro, 160ms) var(--ease-out, ease),
+    transform var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.service-card:hover {
+  border-color: rgba(232,97,74,.3);
+  background: rgba(232,97,74,.04);
+  transform: translateY(calc(-1 * var(--move-sm, 4px)));
+}
+
+/* Browser chrome bar */
+.service-browser-bar {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: rgba(240,244,248,.04);
+  border-bottom: 1px solid rgba(240,244,248,.06);
+}
+.service-browser-dots {
+  display: flex; gap: 5px; flex-shrink: 0;
+}
+.service-browser-dots span {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.service-browser-dots span:nth-child(1) { background: #ff5f57; }
+.service-browser-dots span:nth-child(2) { background: #febc2e; }
+.service-browser-dots span:nth-child(3) { background: #28c840; }
+.service-browser-url {
+  flex: 1;
+  display: flex; align-items: center; gap: var(--sp-2);
+  background: rgba(240,244,248,.06);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-1) var(--sp-3);
+  font-size: .65rem; color: rgba(240,244,248,.35);
+  letter-spacing: .02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.service-browser-url svg {
+  width: 12px; height: 12px; flex-shrink: 0;
+  opacity: .4;
+}
+
+.service-card-body {
+  padding: var(--sp-5) var(--sp-5) var(--sp-6);
+}
+.service-icon { font-size: 1.3rem; margin-bottom: var(--sp-4); }
+.service-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; margin-bottom: var(--sp-3);
+}
+.service-list { list-style: none; }
+.service-list li {
+  font-size: .82rem; color: rgba(240,244,248,.55);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid rgba(240,244,248,.05);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.service-list li:last-child { border-bottom: none; }
+.service-list li span { font-size: .72rem; color: var(--coral); font-weight: 500; }
+
+/* Service card — clickable + hover overlay */
+.service-card[tabindex] { cursor: pointer; position: relative; }
+.service-card-hover {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: var(--sp-6);
+  background: linear-gradient(to top, rgba(13,27,42,.52) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .22s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.service-card[tabindex]:hover .service-card-hover,
+.service-card[tabindex]:focus-visible .service-card-hover { opacity: 1; }
+.service-card-hover span {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  background: var(--coral); color: var(--white);
+  font-size: .78rem; font-weight: 600; letter-spacing: .04em;
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 16px rgba(232,97,74,.35);
+  transform: translateY(6px);
+  transition: transform .22s ease;
+}
+.service-card[tabindex]:hover .service-card-hover span,
+.service-card[tabindex]:focus-visible .service-card-hover span {
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════
+   SERVICE DETAIL MODAL
+═══════════════════════════════════════ */
+.svc-modal {
+  position: fixed; inset: 0; z-index: 210;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity .32s ease, visibility .32s ease;
+}
+.svc-modal.is-open { opacity: 1; visibility: visible; }
+
+.svc-modal-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(13,27,42,.76);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.svc-modal-panel {
+  position: relative;
+  width: min(920px, 92vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ink);
+  border: 1px solid rgba(240,244,248,.08);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 32px 80px rgba(0,0,0,.45);
+  transform: translateY(28px) scale(.96);
+  transition: transform .36s cubic-bezier(.2,.8,.2,1);
+}
+.svc-modal.is-open .svc-modal-panel {
+  transform: translateY(0) scale(1);
+}
+
+/* Browser bar inside modal */
+.svc-modal-browser-bar {
+  position: sticky; top: 0; z-index: 3;
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-5);
+  background: rgba(13,27,42,.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(240,244,248,.06);
+}
+.svc-modal-browser-bar .service-browser-dots { display: flex; gap: 5px; flex-shrink: 0; }
+.svc-modal-browser-bar .service-browser-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.svc-modal-browser-bar .service-browser-dots span:nth-child(1) { background: #ff5f57; }
+.svc-modal-browser-bar .service-browser-dots span:nth-child(2) { background: #febc2e; }
+.svc-modal-browser-bar .service-browser-dots span:nth-child(3) { background: #28c840; }
+.svc-modal-browser-bar .service-browser-url {
+  flex: 1; display: flex; align-items: center; gap: var(--sp-2);
+  background: rgba(240,244,248,.06);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: .72rem; color: rgba(240,244,248,.35);
+}
+.svc-modal-browser-bar .service-browser-url svg {
+  width: 14px; height: 14px; flex-shrink: 0; opacity: .4;
+}
+
+/* Close button in modal */
+.svc-modal-close {
+  width: 36px; height: 36px;
+  border: none; border-radius: 50%;
+  background: rgba(240,244,248,.08);
+  color: rgba(240,244,248,.6);
+  font-size: 1.3rem; line-height: 1;
+  cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+.svc-modal-close:hover {
+  background: rgba(232,97,74,.2); color: var(--white); transform: scale(1.1);
+}
+
+/* Modal body */
+.svc-modal-body {
+  padding: var(--sp-7) var(--sp-8) var(--sp-8);
+  color: var(--white);
+}
+.svc-modal-header {
+  display: flex; align-items: center; gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid rgba(240,244,248,.06);
+}
+.svc-modal-header .service-icon { margin-bottom: 0; font-size: 1.5rem; }
+.svc-modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 900; line-height: 1.2;
+}
+.svc-modal-price-summary {
+  font-size: .82rem; color: rgba(240,244,248,.4);
+  margin-top: var(--sp-1);
+}
+
+/* Content grid inside modal */
+.svc-modal-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--sp-7) var(--sp-8);
+}
+.svc-modal-section h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--coral);
+  margin-bottom: var(--sp-3);
+  display: flex; align-items: center; gap: var(--sp-2);
+}
+.svc-modal-section h4::before {
+  content: ''; width: 1rem; height: 1px; background: var(--coral);
+}
+.svc-modal-section ul {
+  list-style: none;
+}
+.svc-modal-section ul li {
+  font-size: .85rem; color: rgba(240,244,248,.6);
+  padding: var(--sp-2) 0;
+  line-height: 1.6;
+  display: flex; align-items: baseline; gap: var(--sp-2);
+}
+.svc-modal-section ul li::before {
+  content: ''; flex-shrink: 0;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--coral); margin-top: .45em;
+}
+.svc-modal-section p {
+  font-size: .85rem; color: rgba(240,244,248,.55);
+  line-height: 1.7;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .svc-modal, .svc-modal-panel,
+  .service-card-hover, .service-card-hover span { transition-duration: 0s !important; }
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .svc-modal-panel { width: 96vw; max-height: 92vh; }
+  .svc-modal-body { padding: var(--sp-5) var(--sp-5) var(--sp-6); }
+  .svc-modal-grid { grid-template-columns: 1fr; gap: var(--sp-5); }
+}
+
+
+/* ═══════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════ */
+#about {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--sp-9); align-items: center;
+}
+.about-img-wrap { position: relative; }
+.about-img {
+  border-radius: var(--radius-lg); overflow: hidden;
+  background: linear-gradient(135deg, #1a3a5c, #2d5a8c);
+  aspect-ratio: 4/5;
+  box-shadow: var(--shadow-hover);
+}
+.about-badge {
+  position: absolute; bottom: -1rem; right: -1rem;
+  background: var(--coral); color: var(--white);
+  width: 96px; height: 96px; border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 6px 20px rgba(232,97,74,.35);
+}
+.about-badge-num { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+.about-badge-text { font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+
+
+
+
+
+/* ═══════════════════════════════════════
+   FAQ — CSS grid accordion
+═══════════════════════════════════════ */
+.faq-wrapper {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--sp-9); align-items: start;
+}
+.faq-list { max-width: 100%; }
+.faq-item { border-bottom: 1px solid var(--border); }
+
+.faq-q {
+  width: 100%; text-align: left;
+  padding: var(--sp-5) 0;
+  font-size: .92rem; font-weight: 500;
+  cursor: pointer; background: none; border: none;
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  display: flex; justify-content: space-between;
+  align-items: center; gap: var(--sp-4);
+  min-height: var(--touch-min);
+  transition: color var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.faq-q:hover { color: var(--coral); }
+
+.faq-icon {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 1.5px solid var(--coral); color: var(--coral);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem; flex-shrink: 0;
+  transition:
+    background var(--dur-short, 220ms) var(--ease-out, ease),
+    color var(--dur-short, 220ms) var(--ease-out, ease),
+    transform var(--dur-short, 220ms) var(--ease-out, ease);
+}
+.faq-q[aria-expanded="true"] .faq-icon {
+  background: var(--coral); color: var(--white);
+  transform: rotate(45deg);
+}
+
+/* Grid-based smooth height */
+.faq-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-medium, 320ms) var(--ease-out, ease);
+}
+.faq-body[aria-hidden="false"] {
+  grid-template-rows: 1fr;
+}
+.faq-body-inner {
+  overflow: hidden;
+  font-size: .88rem; color: var(--muted); line-height: 1.75;
+}
+.faq-body-inner > p {
+  padding-bottom: var(--sp-4);
+}
+
+/* ═══════════════════════════════════════
+   CTA
+═══════════════════════════════════════ */
+#cta {
+  background: var(--ink); color: var(--white);
+  overflow: hidden;
+}
+.cta-inner { text-align: center; padding: var(--sp-10) var(--sp-8); }
+#cta h2 { color: var(--white); max-width: 18ch; margin: 0 auto var(--sp-4); }
+#cta .section-eyebrow { justify-content: center; color: var(--coral-lt); }
+#cta .section-eyebrow::before { background: var(--coral); }
+#cta .section-lead {
+  color: rgba(240,244,248,.5);
+  margin: 0 auto var(--sp-7); text-align: center;
+}
+
+.cta-email-form {
+  display: flex; gap: var(--sp-3);
+  justify-content: center;
+  max-width: 440px; margin: 0 auto;
+}
+.cta-email-form label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+.cta-email-form input {
+  flex: 1; padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(240,244,248,.18);
+  background: rgba(240,244,248,.06);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: .9rem;
+  min-height: var(--touch-min);
+  transition: border-color var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+/* a11y: removed outline:none — let global :focus-visible from ui.motion.css handle ring */
+.cta-email-form input:focus { border-color: var(--coral); }
+.cta-email-form input::placeholder { color: rgba(240,244,248,.3); }
+.cta-email-form button {
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--coral); border: none;
+  border-radius: var(--radius-pill);
+  color: var(--white); font-family: 'DM Sans', sans-serif;
+  font-weight: 600; font-size: .88rem;
+  cursor: pointer; white-space: nowrap;
+  min-height: var(--touch-min);
+  transition:
+    transform var(--dur-micro, 160ms) var(--ease-out, ease),
+    box-shadow var(--dur-micro, 160ms) var(--ease-out, ease);
+  box-shadow: 0 4px 16px rgba(232,97,74,.3);
+}
+.cta-email-form button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,97,74,.4); }
+.cta-email-form button:active { transform: translateY(0) scale(.98); transition-duration: 80ms; }
+
+/* ═══════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════ */
+#contact {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--sp-9); background: var(--card-bg);
+}
+.contact-detail {
+  display: flex; align-items: center; gap: var(--sp-3);
+  font-size: .88rem; color: var(--muted);
+  margin-bottom: var(--sp-3); min-height: var(--touch-min);
+}
+.contact-detail a { color: inherit; text-decoration: none; }
+.contact-detail a:hover { color: var(--coral); }
+.contact-detail-icon {
+  width: 2.2rem; height: 2.2rem; border-radius: 50%;
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; color: var(--white); flex-shrink: 0;
+}
+
+/* Contact form */
+.contact-form { position: relative; }
+.contact-form .form-group { margin-bottom: var(--sp-4); }
+.contact-form label {
+  display: block; font-size: .8rem; font-weight: 500;
+  color: var(--muted); margin-bottom: var(--sp-2);
+}
+.contact-form input,
+.contact-form textarea {
+  width: 100%; padding: var(--sp-3) var(--sp-4);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  font-size: .9rem; color: var(--ink);
+  min-height: var(--touch-min);
+  transition:
+    border-color var(--dur-micro, 160ms) var(--ease-out, ease),
+    box-shadow var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+/* a11y: removed outline:none — global :focus-visible provides keyboard ring */
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgba(232,97,74,.1);
+}
+.contact-form textarea { resize: vertical; min-height: 120px; }
+
+.contact-type-btns {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-3); margin-bottom: var(--sp-5);
+}
+.ctype {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-4); background: var(--cream);
+  cursor: pointer; text-align: center;
+  min-height: var(--touch-min);
+  transition:
+    border-color var(--dur-micro, 160ms) var(--ease-out, ease),
+    background var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+.ctype:hover,
+.ctype[aria-checked="true"] {
+  border-color: var(--coral);
+  background: rgba(232,97,74,.05);
+}
+.ctype-title { font-size: .82rem; font-weight: 500; margin-bottom: var(--sp-1); }
+.ctype-desc { font-size: .72rem; color: var(--muted); }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  background: var(--ink); color: rgba(240,244,248,.45);
+  padding: var(--sp-7) var(--sp-8);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .8rem;
+}
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  color: var(--white); font-size: 1rem; font-weight: 700;
+}
+.footer-logo span { color: var(--coral); }
+footer ul { list-style: none; display: flex; gap: var(--sp-6); }
+footer ul a {
+  color: rgba(240,244,248,.45); text-decoration: none;
+  min-height: var(--touch-min); display: inline-flex; align-items: center;
+  transition: color var(--dur-micro, 160ms) var(--ease-out, ease);
+}
+footer ul a:hover { color: var(--coral); }
+
+/* ═══════════════════════════════════════
+   KEYFRAMES (hero entrance)
+═══════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(var(--move-md, 8px)); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 900px) {
+  :root { --sp-8: 1.5rem; --nav-h: 68px; }
+  .nav-spacer { height: 60px; }
+  nav { padding: var(--sp-4) var(--sp-5); flex-wrap: wrap; }
+  .nav-hamburger { display: flex; order: 3; }
+  .nav-cta { order: 4; }
+  nav ul {
+    display: flex; flex-direction: column;
+    width: 100%; order: 5;
+    gap: 0; padding: 0;
+    max-height: 0; overflow: hidden;
+    transition: max-height .35s ease, padding .35s ease;
+  }
+  nav ul.mobile-open {
+    max-height: 320px;
+    padding: var(--sp-4) 0;
+  }
+  nav ul li { width: 100%; }
+  nav ul a {
+    width: 100%; padding: var(--sp-3) 0;
+    font-size: .9rem;
+    border-bottom: 1px solid var(--border);
+  }
+  nav ul a::after { display: none; }
+  #hero, #about, #contact { grid-template-columns: 1fr; }
+  #hero { padding-top: var(--sp-10); min-height: auto; }
+  section { padding: var(--sp-8) var(--sp-5); }
+  .work-grid,
+  .services-grid,
+  .faq-wrapper,
+  .contact-type-btns { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  footer { flex-direction: column; gap: var(--sp-4); text-align: center; }
+  footer ul { flex-wrap: wrap; justify-content: center; }
+  .about-badge { bottom: -.5rem; right: -.5rem; }
+}
+
+/* ═══════════════════════════════════════
+   BACK TO TOP BUTTON
+═══════════════════════════════════════ */
+.back-to-top {
+  position: fixed; bottom: var(--sp-6); right: var(--sp-6);
+  z-index: 90;
+  width: 48px; height: 48px;
+  border-radius: 50%; border: none;
+  background: var(--coral); color: var(--white);
+  font-size: 1.2rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(232,97,74,.30);
+  opacity: 0; visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity .3s ease, visibility .3s ease, transform .3s ease, background .2s ease;
+}
+.back-to-top.visible {
+  opacity: 1; visibility: visible;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  background: #d1533f;
+  transform: translateY(-2px);
+}
+[data-theme="dark"] .back-to-top {
+  box-shadow: 0 4px 16px rgba(240,116,98,.25);
+}
+
+/* ═══════════════════════════════════════
+   FORM FEEDBACK TOAST
+═══════════════════════════════════════ */
+.form-toast {
+  position: fixed; bottom: var(--sp-7); left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: var(--white);
+  padding: var(--sp-3) var(--sp-6);
+  border-radius: var(--radius-pill);
+  font-size: .88rem; font-weight: 500;
+  box-shadow: var(--shadow-md);
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s ease, transform .3s ease, visibility .3s ease;
+  z-index: 300;
+  pointer-events: none;
+}
+.form-toast.show {
+  opacity: 1; visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+[data-theme="dark"] .form-toast {
+  background: var(--card-bg);
+  color: var(--cream);
+}
+@media (max-width: 600px) {
+  .cta-email-form { flex-direction: column; }
+}
+
+/* ═══════════════════════════════════════
+   A11Y — :focus-visible, :active, :disabled
+   Keyboard-nav & interaction refinements
+═══════════════════════════════════════ */
+
+/* ── :focus-visible refinements ── */
+
+/* Coral-bg buttons: ink ring so outline contrasts with bg */
+.btn-primary:focus-visible,
+.nav-cta:focus-visible,
+.back-to-top:focus-visible,
+.cta-email-form button:focus-visible {
+  outline-color: var(--ink);
+  outline-offset: 3px;
+}
+
+/* Nav links: underline reveal replaces ring */
+nav ul a:focus-visible {
+  outline: none;
+  color: var(--coral);
+}
+nav ul a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Work items: show overlay on keyboard focus */
+.work-item:focus-visible .work-overlay {
+  opacity: 1;
+}
+
+/* Service cards: explicit ring */
+.service-card:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+/* Inputs: explicit ring (overrides earlier removed outline:none) */
+.cta-email-form input:focus-visible,
+.contact-form input:focus-visible,
+.contact-form textarea:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: -1px;
+}
+
+/* ── :active — tactile press feedback ── */
+.back-to-top:active {
+  transform: scale(.88);
+  transition-duration: 80ms;
+}
+.project-modal-close:active,
+.svc-modal-close:active {
+  transform: scale(.85);
+  transition-duration: 80ms;
+}
+.faq-q:active { opacity: .7; }
+.services-tabs [role="tab"]:active {
+  transform: scale(.95);
+  transition-duration: 80ms;
+}
+.work-item:active {
+  transform: scale(.98);
+  transition-duration: 80ms;
+}
+.service-card:active {
+  transform: translateY(0) scale(.98);
+  transition-duration: 80ms;
+}
+.work-link:active { opacity: .7; }
+.ctype:active {
+  transform: scale(.97);
+  transition-duration: 80ms;
+}
+footer ul a:active,
+.contact-detail a:active { opacity: .6; }
+
+/* ── :disabled — prevents hover/active lift while disabled ── */
+.btn-primary[disabled],
+.btn-outline[disabled],
+.cta-email-form button[disabled] {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ═══════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════ */
+[data-theme="dark"] {
+  --ink:       #e8ecf0;
+  --cream:     #0f1923;
+  --coral:     #f07462;
+  --coral-lt:  #f4a899;
+  --navy:      #a4c0d8;
+  --muted:     #8fa8bc;
+  --card-bg:   #162230;
+  --border:    rgba(240,244,248,.08);
+  --white:     #e8ecf0;
+
+  --shadow-sm:    0 2px 8px rgba(0,0,0,.20);
+  --shadow-md:    0 8px 24px rgba(0,0,0,.30);
+  --shadow-hover: 0 12px 32px rgba(0,0,0,.35);
+}
+
+/* Nav scrolled in dark mode */
+[data-theme="dark"] nav.scrolled {
+  background: rgba(15,25,35,.92);
+  border-color: rgba(240,244,248,.06);
+}
+
+/* Hero card bg */
+[data-theme="dark"] .hero-card { background: var(--card-bg); }
+
+/* Work overlay already uses rgba — works automatically */
+
+/* Services dark section keeps its own colors */
+[data-theme="dark"] #services {
+  background: #0a1018;
+}
+/* Work section */
+[data-theme="dark"] #work {
+  background: var(--card-bg);
+}
+[data-theme="dark"] .work-meta {
+  background: var(--cream);
+}
+
+/* Contact section */
+[data-theme="dark"] #contact {
+  background: var(--card-bg);
+}
+[data-theme="dark"] .contact-form input,
+[data-theme="dark"] .contact-form textarea {
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--border);
+}
+[data-theme="dark"] .contact-form input:focus,
+[data-theme="dark"] .contact-form textarea:focus {
+  border-color: var(--coral);
+}
+
+[data-theme="dark"] .ctype {
+  background: var(--cream);
+  border-color: var(--border);
+}
+
+/* CTA section */
+[data-theme="dark"] #cta {
+  background: #0a1018;
+}
+
+/* Footer */
+[data-theme="dark"] footer {
+  background: #080e15;
+}
+
+/* Hero gradients subdued */
+[data-theme="dark"] .hero-card:nth-child(1) .hero-card-img { background: linear-gradient(135deg,#1e3448,#253d52); }
+[data-theme="dark"] .hero-card:nth-child(2) .hero-card-img { background: linear-gradient(135deg,#4a2a22,#5c382e); }
+[data-theme="dark"] .hero-card:nth-child(3) .hero-card-img { background: linear-gradient(135deg,#1a3040,#24404e); }
+[data-theme="dark"] .hero-card:nth-child(4) .hero-card-img { background: linear-gradient(135deg,#4a2820,#5c3528); }
+
+[data-theme="dark"] .work-item:nth-child(1) .work-thumb { background: linear-gradient(135deg,#1e3448,#253d52); }
+[data-theme="dark"] .work-item:nth-child(2) .work-thumb { background: linear-gradient(135deg,#4a2a22,#5c382e); }
+[data-theme="dark"] .work-item:nth-child(3) .work-thumb { background: linear-gradient(135deg,#1a3040,#24404e); }
+[data-theme="dark"] .work-item:nth-child(4) .work-thumb { background: linear-gradient(135deg,#4a2820,#5c3528); }
+
+[data-theme="dark"] .about-img { background: linear-gradient(135deg, #0d2038, #1a3a5c); }
+
+/* Btn-outline in dark */
+[data-theme="dark"] .btn-outline {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+[data-theme="dark"] .btn-outline:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* ── THEME TOGGLE — Compass branding ── */
+.theme-toggle {
+  position: relative;
+  width: 44px; height: 44px;
+  border: none; background: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: box-shadow 320ms var(--ease-out, ease);
+  box-shadow: 0 0 0 transparent;
+}
+.theme-toggle:hover {
+  box-shadow: 0 0 12px rgba(26,58,92,.25);
+}
+.theme-toggle:active {
+  transform: scale(.93);
+}
+[data-theme="dark"] .theme-toggle:hover {
+  box-shadow: 0 0 14px rgba(240,116,98,.35);
+}
+
+/* SVG compass */
+.theme-toggle svg {
+  width: 24px; height: 24px;
+  overflow: visible;
+  filter: drop-shadow(0 0 0 transparent);
+  transition: filter 320ms var(--ease-out, ease);
+}
+[data-theme="dark"] .theme-toggle svg {
+  filter: drop-shadow(0 0 5px rgba(240,116,98,.4));
+}
+
+/* Outer ring */
+.theme-toggle .compass-ring {
+  fill: none;
+  stroke: #1a3a5c;
+  stroke-width: 1.2;
+  opacity: .4;
+  transition: stroke 320ms var(--ease-out, ease), opacity 320ms var(--ease-out, ease);
+}
+[data-theme="dark"] .theme-toggle .compass-ring {
+  stroke: #e8614a;
+  opacity: .5;
+}
+
+/* Cardinal ticks */
+.theme-toggle .compass-tick {
+  fill: #1a3a5c;
+  opacity: .35;
+  transition: fill 320ms var(--ease-out, ease), opacity 320ms var(--ease-out, ease);
+}
+[data-theme="dark"] .theme-toggle .compass-tick {
+  fill: #e8614a;
+  opacity: .45;
+}
+
+/* Needle group — rotates on toggle */
+.theme-toggle .compass-needle {
+  transform-origin: 12px 12px;
+  transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+[data-theme="dark"] .theme-toggle .compass-needle {
+  transform: rotate(180deg);
+}
+
+/* Needle halves */
+.theme-toggle .compass-n {
+  fill: #1a3a5c;
+  transition: fill 320ms var(--ease-out, ease);
+}
+[data-theme="dark"] .theme-toggle .compass-n {
+  fill: #e8614a;
+}
+.theme-toggle .compass-s {
+  fill: #1a3a5c;
+  opacity: .4;
+  transition: fill 320ms var(--ease-out, ease), opacity 320ms var(--ease-out, ease);
+}
+[data-theme="dark"] .theme-toggle .compass-s {
+  fill: #e8614a;
+  opacity: .55;
+}
+
+/* Center dot */
+.theme-toggle .compass-center {
+  fill: #1a3a5c;
+  transition: fill 320ms var(--ease-out, ease);
+}
+[data-theme="dark"] .theme-toggle .compass-center {
+  fill: #e8614a;
+}
+
+/* ═══════════════════════════════════════
+   PROJECT DETAIL MODAL
+═══════════════════════════════════════ */
+.project-modal {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity .35s ease, visibility .35s ease;
+}
+.project-modal.is-open {
+  opacity: 1; visibility: visible;
+}
+.project-modal-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(13,27,42,.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.project-modal-content {
+  position: relative;
+  display: flex; align-items: stretch;
+  width: min(920px, 90vw);
+  max-height: 85vh;
+  background: var(--cream);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 64px rgba(13,27,42,.25);
+  overflow: hidden;
+  transform: translateY(32px) scale(.97);
+  transition: transform .4s cubic-bezier(.2,.8,.2,1);
+}
+.project-modal.is-open .project-modal-content {
+  transform: translateY(0) scale(1);
+}
+.project-modal-close {
+  position: absolute; top: var(--sp-4); right: var(--sp-4);
+  z-index: 10;
+  width: 40px; height: 40px;
+  border: none; border-radius: 50%;
+  background: rgba(13,27,42,.08);
+  color: var(--ink);
+  font-size: 1.5rem; line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s ease, transform .2s ease;
+}
+.project-modal-close:hover {
+  background: rgba(232,97,74,.15); transform: scale(1.1);
+}
+.project-modal-img {
+  flex: 0 0 45%; min-height: 360px;
+  background-size: cover; background-position: center;
+}
+.project-modal-info {
+  flex: 1; padding: var(--sp-8) var(--sp-7);
+  display: flex; flex-direction: column; justify-content: center;
+  gap: var(--sp-4);
+}
+.project-modal-tag {
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--coral); font-weight: 600;
+}
+.project-modal-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  font-weight: 900; line-height: 1.2;
+  color: var(--ink);
+}
+.project-modal-desc {
+  font-size: .95rem; line-height: 1.7;
+  color: var(--muted);
+}
+.project-modal-cta {
+  align-self: flex-start; margin-top: var(--sp-3);
+}
+
+/* Dark mode */
+[data-theme="dark"] .project-modal-backdrop {
+  background: rgba(8,14,21,.82);
+}
+[data-theme="dark"] .project-modal-content {
+  background: var(--card-bg);
+}
+[data-theme="dark"] .project-modal-title {
+  color: var(--cream);
+}
+[data-theme="dark"] .project-modal-desc {
+  color: var(--muted);
+}
+[data-theme="dark"] .project-modal-close {
+  background: rgba(240,244,248,.1);
+  color: var(--cream);
+}
+[data-theme="dark"] .project-modal-close:hover {
+  background: rgba(232,97,74,.25);
+}
+
+/* Responsive — stack on mobile */
+@media (max-width: 700px) {
+  .project-modal-content {
+    flex-direction: column;
+    width: 94vw;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .project-modal-img {
+    flex: none; min-height: 220px; width: 100%;
+  }
+  .project-modal-info {
+    padding: var(--sp-6) var(--sp-5);
+  }
+}
+</style>
+
+<!-- Prevent FOUC: apply saved theme before paint -->
+<script>
+(function(){
+  const t = localStorage.getItem('theme');
+  if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme:dark)').matches))
+    document.documentElement.setAttribute('data-theme','dark');
+})();
+</script>
+</head>
+<body>
+
+<!-- Skip to content — a11y -->
+<a href="#main" class="skip-link">Ir al contenido principal</a>
+
+<!-- ─── NAV ─── -->
+<div class="nav-spacer" aria-hidden="true"></div>
+<nav id="navbar" aria-label="Navegación principal">
+  <a href="#hero" class="logo" aria-label="CompassAgency — Inicio">Compass<span>Agency</span></a>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menú" aria-expanded="false" type="button">
+    <span></span><span></span><span></span>
+  </button>
+  <ul role="list" id="navMenu">
+    <li><a href="#work">Portafolio</a></li>
+    <li><a href="#services">Servicios</a></li>
+    <li><a href="#about">Nosotros</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro" aria-pressed="false" type="button">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <!-- Outer ring -->
+      <circle class="compass-ring" cx="12" cy="12" r="10.5"/>
+      <!-- Cardinal ticks (N E S W) -->
+      <rect class="compass-tick" x="11.5" y="1" width="1" height="2.2" rx=".5"/>
+      <rect class="compass-tick" x="11.5" y="20.8" width="1" height="2.2" rx=".5"/>
+      <rect class="compass-tick" x="1" y="11.5" width="2.2" height="1" rx=".5"/>
+      <rect class="compass-tick" x="20.8" y="11.5" width="2.2" height="1" rx=".5"/>
+      <!-- Needle -->
+      <g class="compass-needle">
+        <polygon class="compass-n" points="12,3.5 13.6,11.4 12,10.4 10.4,11.4"/>
+        <polygon class="compass-s" points="12,20.5 13.6,12.6 12,13.6 10.4,12.6"/>
+      </g>
+      <!-- Center pivot -->
+      <circle class="compass-center" cx="12" cy="12" r="1.6"/>
+    </svg>
+  </button>
+  <a href="#contact" class="nav-cta">Hablemos →</a>
+</nav>
+
+<!-- ─── MAIN CONTENT ─── -->
+<main id="main">
+
+<!-- ─── HERO ─── -->
+<section id="hero" aria-labelledby="hero-heading">
+  <div class="hero-mesh" aria-hidden="true"></div>
+
+  <div class="hero-text">
+    <p class="hero-eyebrow">Diseño &amp; Desarrollo Web</p>
+    <h1 id="hero-heading">
+      <span class="line"><span>Hacemos que</span></span>
+      <span class="line"><span>tu marca <em>se vea</em></span></span>
+      <span class="line"><span>como merece.</span></span>
+    </h1>
+    <p class="hero-sub">Somos una agencia pequeña de Santo Domingo. Diseñamos sitios web, creamos identidades de marca y producimos contenido visual. Sin rodeos.</p>
+    <div class="btn-group">
+      <a href="#work" class="btn-primary">Ver portafolio</a>
+      <a href="#contact" class="btn-outline">Contáctanos</a>
+    </div>
+  </div>
+
+  <div class="hero-visual" aria-label="Proyectos destacados">
+    <article class="hero-card">
+      <div class="hero-card-img" data-label="Web" role="img" aria-label="E-Commerce Store"></div>
+      <div class="hero-card-body"><p class="hero-card-title">E-Commerce Store</p><p class="hero-card-tag">Web · 2024</p></div>
+    </article>
+    <article class="hero-card">
+      <div class="hero-card-img" data-label="UI/UX" role="img" aria-label="App de Finanzas"></div>
+      <div class="hero-card-body"><p class="hero-card-title">App de Finanzas</p><p class="hero-card-tag">UI/Branding · 2024</p></div>
+    </article>
+    <article class="hero-card">
+      <div class="hero-card-img" data-label="Brand" role="img" aria-label="Identidad Visual"></div>
+      <div class="hero-card-body"><p class="hero-card-title">Identidad Visual</p><p class="hero-card-tag">Branding · 2024</p></div>
+    </article>
+    <article class="hero-card">
+      <div class="hero-card-img" data-label="Media" role="img" aria-label="Video Corporativo"></div>
+      <div class="hero-card-body"><p class="hero-card-title">Video Corporativo</p><p class="hero-card-tag">Media/Drone · 2024</p></div>
+    </article>
+  </div>
+</section>
+
+<!-- ─── WORK ─── -->
+<section id="work" aria-labelledby="work-heading">
+  <div class="work-header reveal">
+    <div>
+      <p class="section-eyebrow">Trabajos recientes</p>
+      <h2 id="work-heading">Algunos proyectos <em>que nos gustan</em></h2>
+    </div>
+    <a href="#work" class="work-link" aria-label="Ver portafolio completo">Ver portafolio →</a>
+  </div>
+  <div class="work-grid">
+    <article class="work-item reveal stagger-1" style="grid-row:span 2" tabindex="0" role="button"
+      aria-label="Ver detalle: Rebrand Completo — Natura Co."
+      data-project-title="Rebrand Completo — Natura Co."
+      data-project-tag="Branding · Web"
+      data-project-desc="Desarrollamos una solución web para un laboratorio enfocada en la administración y trazabilidad de muestras de sustancias, integrando sus metadatos, validaciones del flujo y control de roles dentro del proceso operativo.">
+      <div class="work-thumb" style="aspect-ratio:3/4"></div>
+      <div class="work-overlay"><p class="work-overlay-title">Rebrand Completo — Natura Co.</p><p class="work-overlay-tag">Branding · Web</p></div>
+      <div class="work-meta"><p class="work-meta-title">Natura Co.</p><p class="work-meta-sub">Branding &amp; Web</p></div>
+    </article>
+    <article class="work-item reveal stagger-2" tabindex="0" role="button"
+      aria-label="Ver detalle: Dashboard Analytics"
+      data-project-title="Dashboard Analytics"
+      data-project-tag="UI/UX Design"
+      data-project-desc="Diseñamos la identidad de marca, la interfaz y la experiencia de usuario de una aplicación móvil enfocada en la atención y gestión de emergencias.">
+      <div class="work-thumb"></div>
+      <div class="work-overlay"><p class="work-overlay-title">Dashboard Analytics</p><p class="work-overlay-tag">UI/UX Design</p></div>
+      <div class="work-meta"><p class="work-meta-title">Fintech App</p><p class="work-meta-sub">UI/UX Design</p></div>
+    </article>
+    <article class="work-item reveal stagger-3" tabindex="0" role="button"
+      aria-label="Ver detalle: Video Aéreo — Evento"
+      data-project-title="Video Aéreo — Evento"
+      data-project-tag="Media/Drone"
+      data-project-desc="Desarrollamos una solución web para la gestión y traslado de sustancias, con formularios, flujos de negocio, esquema de base de datos, autenticación y control de permisos. La plataforma permite registrar solicitudes de traslado y coordina la revisión por distintos roles hasta su validación y aprobación final.">
+      <div class="work-thumb"></div>
+      <div class="work-overlay"><p class="work-overlay-title">Video Aéreo — Evento</p><p class="work-overlay-tag">Media/Drone</p></div>
+      <div class="work-meta"><p class="work-meta-title">Event Reel</p><p class="work-meta-sub">Media/Drone</p></div>
+    </article>
+    <article class="work-item reveal stagger-4" tabindex="0" role="button"
+      aria-label="Ver detalle: E-Commerce Store"
+      data-project-title="E-Commerce Store"
+      data-project-tag="Web · Shopify"
+      data-project-desc="Tienda online completa en Shopify para una marca de moda local. Diseño responsivo, pasarela de pago y catálogo optimizado.">
+      <div class="work-thumb"></div>
+      <div class="work-overlay"><p class="work-overlay-title">E-Commerce Store</p><p class="work-overlay-tag">Web · Shopify</p></div>
+      <div class="work-meta"><p class="work-meta-title">Moda Local</p><p class="work-meta-sub">E-Commerce</p></div>
+    </article>
+  </div>
+</section>
+
+
+<!-- ─── SERVICES ─── -->
+<section id="services" aria-labelledby="services-heading">
+  <p class="section-eyebrow reveal">Servicios</p>
+  <h2 id="services-heading" class="reveal">Lo que <em>hacemos</em></h2>
+  <p class="section-lead reveal">Nos enfocamos en tres cosas y las hacemos bien.</p>
+
+  <div class="services-tabs reveal" role="tablist" aria-label="Categorías de servicios">
+    <button role="tab" aria-selected="true" aria-controls="panel-all"  id="tab-all">Todos</button>
+    <button role="tab" aria-selected="false" aria-controls="panel-web" id="tab-web">Web</button>
+    <button role="tab" aria-selected="false" aria-controls="panel-ui"  id="tab-ui">UI/Branding</button>
+    <button role="tab" aria-selected="false" aria-controls="panel-media" id="tab-media">Media/Drone</button>
+  </div>
+
+  <div class="services-panels">
+    <div role="tabpanel" id="panel-all" aria-labelledby="tab-all" class="tab-panel active">
+      <div class="services-grid">
+        <div class="service-card reveal stagger-1" tabindex="0" data-service="web" role="button" aria-label="Web — Ver detalles">
+          <div class="service-card-hover" aria-hidden="true"><span>Ver más →</span></div>
+          <div class="service-browser-bar">
+            <div class="service-browser-dots"><span></span><span></span><span></span></div>
+            <div class="service-browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>compassagency.com/services/web</div>
+          </div>
+          <div class="service-card-body"><div class="service-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8614a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg></div><h3 class="service-name">Web</h3><ul class="service-list"><li>Sitios corporativos<span>Desde $800</span></li><li>E-Commerce<span>Desde $1,200</span></li><li>Landing pages<span>Desde $400</span></li><li>Mantenimiento<span>Desde $80/mes</span></li></ul></div>
+        </div>
+        <div class="service-card reveal stagger-2" tabindex="0" data-service="branding" role="button" aria-label="UI/Branding — Ver detalles">
+          <div class="service-card-hover" aria-hidden="true"><span>Ver más →</span></div>
+          <div class="service-browser-bar">
+            <div class="service-browser-dots"><span></span><span></span><span></span></div>
+            <div class="service-browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>compassagency.com/services/branding</div>
+          </div>
+          <div class="service-card-body"><div class="service-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="#e8614a"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg></div><h3 class="service-name">UI/Branding</h3><ul class="service-list"><li>Identidad visual<span>Desde $600</span></li><li>UI/UX para apps<span>Desde $900</span></li><li>Materiales de marca<span>Desde $300</span></li><li>Guía de marca<span>Desde $200</span></li></ul></div>
+        </div>
+        <div class="service-card reveal stagger-3" tabindex="0" data-service="media" role="button" aria-label="Media / Drone — Ver detalles">
+          <div class="service-card-hover" aria-hidden="true"><span>Ver más →</span></div>
+          <div class="service-browser-bar">
+            <div class="service-browser-dots"><span></span><span></span><span></span></div>
+            <div class="service-browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>compassagency.com/services/media</div>
+          </div>
+          <div class="service-card-body"><div class="service-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8614a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></svg></div><h3 class="service-name">Media / Drone</h3><ul class="service-list"><li>Video corporativo<span>Desde $700</span></li><li>Toma aérea con dron<span>Desde $400</span></li><li>Fotografía<span>Desde $250</span></li><li>Reel para redes<span>Desde $300</span></li></ul></div>
+        </div>
+      </div>
+    </div>
+    <div role="tabpanel" id="panel-web" aria-labelledby="tab-web" class="tab-panel" hidden>
+      <div class="services-grid">
+        <div class="service-card" tabindex="0" data-service="web" role="button" aria-label="Web — Ver detalles">
+          <div class="service-card-hover" aria-hidden="true"><span>Ver más →</span></div>
+          <div class="service-browser-bar">
+            <div class="service-browser-dots"><span></span><span></span><span></span></div>
+            <div class="service-browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>compassagency.com/services/web</div>
+          </div>
+          <div class="service-card-body"><div class="service-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8614a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg></div><h3 class="service-name">Web</h3><ul class="service-list"><li>Sitios corporativos<span>Desde $800</span></li><li>E-Commerce<span>Desde $1,200</span></li><li>Landing pages<span>Desde $400</span></li><li>Mantenimiento<span>Desde $80/mes</span></li></ul></div>
+        </div>
+      </div>
+    </div>
+    <div role="tabpanel" id="panel-ui" aria-labelledby="tab-ui" class="tab-panel" hidden>
+      <div class="services-grid">
+        <div class="service-card" tabindex="0" data-service="branding" role="button" aria-label="UI/Branding — Ver detalles">
+          <div class="service-card-hover" aria-hidden="true"><span>Ver más →</span></div>
+          <div class="service-browser-bar">
+            <div class="service-browser-dots"><span></span><span></span><span></span></div>
+            <div class="service-browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>compassagency.com/services/branding</div>
+          </div>
+          <div class="service-card-body"><div class="service-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="#e8614a"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg></div><h3 class="service-name">UI/Branding</h3><ul class="service-list"><li>Identidad visual<span>Desde $600</span></li><li>UI/UX para apps<span>Desde $900</span></li><li>Materiales de marca<span>Desde $300</span></li><li>Guía de marca<span>Desde $200</span></li></ul></div>
+        </div>
+      </div>
+    </div>
+    <div role="tabpanel" id="panel-media" aria-labelledby="tab-media" class="tab-panel" hidden>
+      <div class="services-grid">
+        <div class="service-card" tabindex="0" data-service="media" role="button" aria-label="Media / Drone — Ver detalles">
+          <div class="service-card-hover" aria-hidden="true"><span>Ver más →</span></div>
+          <div class="service-browser-bar">
+            <div class="service-browser-dots"><span></span><span></span><span></span></div>
+            <div class="service-browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>compassagency.com/services/media</div>
+          </div>
+          <div class="service-card-body"><div class="service-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8614a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></svg></div><h3 class="service-name">Media / Drone</h3><ul class="service-list"><li>Video corporativo<span>Desde $700</span></li><li>Toma aérea con dron<span>Desde $400</span></li><li>Fotografía<span>Desde $250</span></li><li>Reel para redes<span>Desde $300</span></li></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SERVICE DETAIL MODAL ─── -->
+<div class="svc-modal" id="svcModal">
+  <div class="svc-modal-backdrop"></div>
+  <div class="svc-modal-panel" role="dialog" aria-modal="true" aria-labelledby="svcModalTitle">
+    <div class="svc-modal-browser-bar">
+      <div class="service-browser-dots"><span></span><span></span><span></span></div>
+      <div class="service-browser-url">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
+        <span id="svcModalUrl">compassagency.com/services/web</span>
+      </div>
+      <button class="svc-modal-close" id="svcModalClose" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="svc-modal-body">
+      <div class="svc-modal-header">
+        <div class="service-icon" id="svcModalIcon" aria-hidden="true"></div>
+        <div>
+          <h3 class="svc-modal-title" id="svcModalTitle"></h3>
+          <p class="svc-modal-price-summary" id="svcModalPriceSummary"></p>
+        </div>
+      </div>
+      <div class="svc-modal-grid" id="svcModalGrid"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─── ABOUT ─── -->
+<section id="about" aria-labelledby="about-heading">
+  <div class="about-img-wrap reveal-left">
+    <div class="about-img" role="img" aria-label="Foto del equipo de CompassAgency"></div>
+    <div class="about-badge" aria-hidden="true">
+      <span class="about-badge-num">6+</span>
+      <span class="about-badge-text">años</span>
+    </div>
+  </div>
+  <div class="about-text reveal-right">
+    <p class="section-eyebrow">El equipo</p>
+    <h2 id="about-heading">Sobre <em>nosotros</em></h2>
+    <p class="section-lead">Somos un equipo chiquito: diseñadores, programadores y un par de creativos que no se quedan quietos. No somos una mega agencia con 50 empleados, y eso es a propósito. Trabajamos de cerca con cada cliente porque así salen las mejores cosas.</p>
+    <a href="#contact" class="btn-primary">Escríbenos</a>
+  </div>
+</section>
+
+
+
+<!-- ─── FAQ ─── -->
+<section id="faq" aria-labelledby="faq-heading">
+  <div class="faq-wrapper">
+    <div class="reveal-left">
+      <p class="section-eyebrow">Preguntas frecuentes</p>
+      <h2 id="faq-heading">Preguntas <em>comunes</em></h2>
+      <p class="section-lead">Lo que más nos preguntan antes de empezar.</p>
+    </div>
+    <div class="faq-list reveal-right" role="region" aria-label="Preguntas frecuentes">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="true" aria-controls="faq-a-1" id="faq-q-1">¿Cuánto tarda un proyecto típico?<span class="faq-icon" aria-hidden="true">+</span></button>
+        <div class="faq-body" id="faq-a-1" role="region" aria-labelledby="faq-q-1" aria-hidden="false"><div class="faq-body-inner"><p>Depende del proyecto. Una landing page la tenemos en 1–2 semanas. Algo más completo con branding incluido, entre 4 y 8 semanas.</p></div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-2" id="faq-q-2">¿Ofrecen mantenimiento mensual?<span class="faq-icon" aria-hidden="true">+</span></button>
+        <div class="faq-body" id="faq-a-2" role="region" aria-labelledby="faq-q-2" aria-hidden="true"><div class="faq-body-inner"><p>Sí. Ofrecemos mantenimiento después de la entrega, con ajustes menores, actualizaciones de contenido y mejoras puntuales. Se cotiza por separado según lo que necesites.</p></div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-3" id="faq-q-3">¿Cómo es el proceso de pago?<span class="faq-icon" aria-hidden="true">+</span></button>
+        <div class="faq-body" id="faq-a-3" role="region" aria-labelledby="faq-q-3" aria-hidden="true"><div class="faq-body-inner"><p>Trabajamos por etapas. Normalmente se solicita un anticipo para iniciar y el resto se paga por avances o entregas acordadas en la propuesta.</p></div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-4" id="faq-q-4">¿Qué pasa si no me gusta el diseño?<span class="faq-icon" aria-hidden="true">+</span></button>
+        <div class="faq-body" id="faq-a-4" role="region" aria-labelledby="faq-q-4" aria-hidden="true"><div class="faq-body-inner"><p>Incluimos revisiones para ajustar el diseño según tu feedback. Antes de diseñar, alineamos objetivos, estilo y referencias para reducir al mínimo ese riesgo.</p></div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-5" id="faq-q-5">¿Qué pasa después de la entrega?<span class="faq-icon" aria-hidden="true">+</span></button>
+        <div class="faq-body" id="faq-a-5" role="region" aria-labelledby="faq-q-5" aria-hidden="true"><div class="faq-body-inner"><p>Entregamos todo lo acordado en la propuesta y, si aplica, accesos o archivos necesarios. Si luego necesitas cambios o mejoras, se cotiza como una nueva etapa o mantenimiento.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section id="cta" aria-labelledby="cta-heading">
+  <div class="cta-inner">
+    <p class="section-eyebrow reveal">¿Hablamos?</p>
+    <h2 id="cta-heading" class="reveal">¿Tienes algo en mente?</h2>
+    <p class="section-lead reveal">Cuéntanos tu idea. La primera conversación es gratis y sin compromiso.</p>
+    <form class="cta-email-form reveal" aria-label="Suscripción rápida">
+      <label for="cta-email">Tu email</label>
+      <input type="email" id="cta-email" placeholder="tu@email.com" autocomplete="email" required>
+      <button type="submit">Escríbenos →</button>
+    </form>
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact" aria-labelledby="contact-heading">
+  <div class="reveal-left">
+    <p class="section-eyebrow">Contacto</p>
+    <h2 id="contact-heading">¿Tienes un <em>proyecto</em> en mente?</h2>
+    <p class="section-lead">Escríbenos y te respondemos en menos de 24 horas. Sin formalidades.</p>
+    <address style="font-style:normal">
+      <div class="contact-detail"><div class="contact-detail-icon" aria-hidden="true">✉</div><a href="mailto:hola@compassagency.com">hola@compassagency.com</a></div>
+      <div class="contact-detail"><div class="contact-detail-icon" aria-hidden="true">📞</div><a href="tel:+18090000000">+1 (809) 000-0000</a></div>
+      <div class="contact-detail"><div class="contact-detail-icon" aria-hidden="true">📍</div><span>Santo Domingo, RD — y remoto</span></div>
+    </address>
+  </div>
+  <div class="reveal-right">
+    <fieldset style="border:none;padding:0;margin:0">
+      <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Selecciona el tipo de proyecto</legend>
+      <div class="contact-type-btns" role="radiogroup" aria-label="Tipo de proyecto">
+        <div class="ctype" role="radio" aria-checked="true" tabindex="0"><p class="ctype-title">💻 Diseño Web</p><p class="ctype-desc">Sitio o app nueva</p></div>
+        <div class="ctype" role="radio" aria-checked="false" tabindex="0"><p class="ctype-title">✦ Branding</p><p class="ctype-desc">Identidad visual</p></div>
+        <div class="ctype" role="radio" aria-checked="false" tabindex="0"><p class="ctype-title">🎬 Media</p><p class="ctype-desc">Video &amp; fotografía</p></div>
+      </div>
+    </fieldset>
+    <form class="contact-form" aria-label="Formulario de contacto">
+      <div class="form-group">
+        <label for="contact-name">Nombre</label>
+        <input type="text" id="contact-name" autocomplete="name" required>
+      </div>
+      <div class="form-group">
+        <label for="contact-email">Email</label>
+        <input type="email" id="contact-email" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label for="contact-company">Empresa <span style="font-weight:300;opacity:.6">(opcional)</span></label>
+        <input type="text" id="contact-company" autocomplete="organization">
+      </div>
+      <div class="form-group">
+        <label for="contact-msg">Cuéntanos sobre tu proyecto</label>
+        <textarea id="contact-msg" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Enviar mensaje →</button>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ─── BACK TO TOP ─── -->
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba" type="button">↑</button>
+
+<!-- ─── FORM TOAST ─── -->
+<div class="form-toast" id="formToast" role="status" aria-live="polite"></div>
+
+<!-- ─── PROJECT DETAIL MODAL ─── -->
+<div class="project-modal" id="projectModal" aria-hidden="true" role="dialog" aria-label="Detalle del proyecto">
+  <div class="project-modal-backdrop" aria-hidden="true"></div>
+  <div class="project-modal-content">
+    <button class="project-modal-close" aria-label="Cerrar detalle" type="button">&times;</button>
+    <div class="project-modal-img" id="modalImg"></div>
+    <div class="project-modal-info">
+      <p class="project-modal-tag" id="modalTag"></p>
+      <h3 class="project-modal-title" id="modalTitle"></h3>
+      <p class="project-modal-desc" id="modalDesc"></p>
+      <a href="#contact" class="btn-primary project-modal-cta">Hablemos de tu proyecto →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-logo">Compass<span>Agency</span></div>
+  <ul role="list">
+    <li><a href="#work">Portafolio</a></li>
+    <li><a href="#services">Servicios</a></li>
+    <li><a href="#about">Nosotros</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+  <span>© 2026 CompassAgency</span>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   JS — Accessible interactions
+═══════════════════════════════════════ */
+
+/* ── NAV: scroll state ── */
+const navbar = document.getElementById('navbar');
+const onScroll = () => navbar.classList.toggle('scrolled', scrollY > 40);
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ── HAMBURGER MENU ── */
+const hamburger = document.getElementById('navHamburger');
+const navMenu = document.getElementById('navMenu');
+
+hamburger.addEventListener('click', () => {
+  const open = hamburger.getAttribute('aria-expanded') === 'true';
+  hamburger.setAttribute('aria-expanded', String(!open));
+  hamburger.setAttribute('aria-label', open ? 'Abrir menú' : 'Cerrar menú');
+  navMenu.classList.toggle('mobile-open', !open);
+});
+
+/* Note: mobile menu close on nav-link click is handled by the
+   JS smooth-scroll handler below (which also closes the menu). */
+
+// a11y: Escape closes mobile menu + returns focus
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && hamburger.getAttribute('aria-expanded') === 'true') {
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Abrir menú');
+    navMenu.classList.remove('mobile-open');
+    hamburger.focus();
+  }
+});
+
+/* ── NAV: scroll-spy (improved) ──
+   Tracks ALL visible sections, picks the one closest to the
+   top of the viewport → stable even with short sections.     */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav ul a');
+const navH = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 80;
+
+// Map href → link for O(1) look-ups
+const linkMap = new Map();
+navLinks.forEach(a => { const h = a.getAttribute('href'); if (h) linkMap.set(h, a); });
+
+let activeId = '';
+
+function setActive(id) {
+  if (id === activeId) return;
+  activeId = id;
+  navLinks.forEach(a => a.setAttribute('aria-current', 'false'));
+  const target = linkMap.get('#' + id);
+  if (target) target.setAttribute('aria-current', 'true');
+}
+
+const spyObs = new IntersectionObserver(entries => {
+  // Build a set of currently-visible section IDs
+  entries.forEach(e => e.target._isVis = e.isIntersecting);
+
+  // Pick the topmost visible section (smallest top)
+  let best = null, bestTop = Infinity;
+  sections.forEach(s => {
+    if (!s._isVis) return;
+    const top = s.getBoundingClientRect().top;
+    if (top < bestTop) { bestTop = top; best = s; }
+  });
+
+  // Edge-case: scrolled to very bottom → activate last section
+  if (!best && window.innerHeight + Math.ceil(window.scrollY) >= document.documentElement.scrollHeight) {
+    best = sections[sections.length - 1];
+  }
+  if (best) setActive(best.id);
+}, {
+  /* Wide detection band: from nav-bottom to 40% up from viewport bottom */
+  rootMargin: `-${navH()}px 0px -40% 0px`,
+  threshold: 0
+});
+sections.forEach(s => { s._isVis = false; spyObs.observe(s); });
+
+/* ── NAV: JS smooth-scroll with offset ──
+   Overrides default anchor behaviour so we can:
+   1) compute exact offset from the live --nav-h variable
+   2) honour prefers-reduced-motion
+   3) close mobile menu before scrolling                   */
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const targetId = link.getAttribute('href');
+    if (!targetId || targetId === '#') return;
+    const el = document.querySelector(targetId);
+    if (!el) return;
+    e.preventDefault();
+
+    // Close mobile menu if open
+    if (hamburger.getAttribute('aria-expanded') === 'true') {
+      hamburger.setAttribute('aria-expanded', 'false');
+      hamburger.setAttribute('aria-label', 'Abrir menú');
+      navMenu.classList.remove('mobile-open');
+    }
+
+    const top = el.getBoundingClientRect().top + window.scrollY - navH();
+    window.scrollTo({
+      top,
+      behavior: prefersReduced.matches ? 'auto' : 'smooth'
+    });
+
+    // Move focus for keyboard users (after scroll completes)
+    el.setAttribute('tabindex', '-1');
+    el.focus({ preventScroll: true });
+    el.addEventListener('blur', () => el.removeAttribute('tabindex'), { once: true });
+  });
+});
+
+/* ── SCROLL REVEAL — IntersectionObserver, fire once ── */
+const reveals = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => revealObs.observe(el));
+
+/* ── COUNTER ANIMATION ── */
+function animateCount(el, target, dur = 1400) {
+  let start = null;
+  const step = ts => {
+    if (!start) start = ts;
+    const p = Math.min((ts - start) / dur, 1);
+    const v = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(v * target);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target + '+';
+  };
+  requestAnimationFrame(step);
+}
+const statObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const t = +e.target.dataset.target;
+      if (t) animateCount(e.target, t);
+      statObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num[data-target]').forEach(el => statObs.observe(el));
+
+/* ── FAQ ACCORDION — keyboard + ARIA ── */
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => toggleFaq(btn));
+});
+
+function toggleFaq(btn) {
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  const body = document.getElementById(btn.getAttribute('aria-controls'));
+
+  btn.setAttribute('aria-expanded', String(!expanded));
+  body.setAttribute('aria-hidden', String(expanded));
+  if (!expanded) body.removeAttribute('hidden');
+}
+
+/* ── TABS (Services) — ARIA + keyboard arrows ── */
+const tabs = document.querySelectorAll('[role="tab"]');
+const panels = document.querySelectorAll('[role="tabpanel"]');
+
+function activateTab(tab) {
+  tabs.forEach(t => {
+    t.setAttribute('aria-selected', 'false');
+    t.setAttribute('tabindex', '-1');
+  });
+  panels.forEach(p => {
+    p.classList.remove('active');
+    p.setAttribute('hidden', '');
+  });
+
+  tab.setAttribute('aria-selected', 'true');
+  tab.setAttribute('tabindex', '0');
+  tab.focus();
+
+  const panel = document.getElementById(tab.getAttribute('aria-controls'));
+  panel.classList.add('active');
+  panel.removeAttribute('hidden');
+}
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => activateTab(tab));
+  tab.addEventListener('keydown', e => {
+    const idx = [...tabs].indexOf(tab);
+    let next;
+    if (e.key === 'ArrowRight') next = tabs[(idx + 1) % tabs.length];
+    if (e.key === 'ArrowLeft')  next = tabs[(idx - 1 + tabs.length) % tabs.length];
+    if (e.key === 'Home')       next = tabs[0];
+    if (e.key === 'End')        next = tabs[tabs.length - 1];
+    if (next) { e.preventDefault(); activateTab(next); }
+  });
+});
+// Initial tabindex state
+tabs.forEach((t, i) => t.setAttribute('tabindex', i === 0 ? '0' : '-1'));
+
+/* ── CONTACT TYPE (radio group) — a11y ── */
+const ctypes = document.querySelectorAll('.ctype[role="radio"]');
+ctypes.forEach(card => {
+  card.addEventListener('click', () => selectCtype(card));
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      selectCtype(card);
+    }
+    const items = [...ctypes];
+    const idx = items.indexOf(card);
+    let next;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = items[(idx + 1) % items.length];
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   next = items[(idx - 1 + items.length) % items.length];
+    if (next) { e.preventDefault(); selectCtype(next); next.focus(); }
+  });
+});
+
+function selectCtype(card) {
+  ctypes.forEach(c => {
+    c.setAttribute('aria-checked', 'false');
+    c.setAttribute('tabindex', '-1');
+  });
+  card.setAttribute('aria-checked', 'true');
+  card.setAttribute('tabindex', '0');
+}
+ctypes.forEach((c, i) => c.setAttribute('tabindex', i === 0 ? '0' : '-1'));
+
+/* ── THEME TOGGLE — Compass ── */
+(function() {
+  const toggle = document.getElementById('themeToggle');
+
+  function isDark() {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
+  }
+
+  function syncToggle(dark) {
+    toggle.setAttribute('aria-label', dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+    toggle.setAttribute('aria-pressed', String(dark));
+  }
+
+  function applyTheme(dark) {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+    syncToggle(dark);
+  }
+
+  toggle.addEventListener('click', () => {
+    applyTheme(!isDark());
+  });
+
+  /* Sync on load */
+  syncToggle(isDark());
+})();
+
+/* ── PROJECT MODAL ── */
+(function() {
+  const modal = document.getElementById('projectModal');
+  const backdrop = modal.querySelector('.project-modal-backdrop');
+  const closeBtn = modal.querySelector('.project-modal-close');
+  const modalImg = document.getElementById('modalImg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalTag = document.getElementById('modalTag');
+  const modalDesc = document.getElementById('modalDesc');
+
+  // Gradient map for each project (mirrors the work-thumb backgrounds)
+  const thumbGradients = [
+    'linear-gradient(135deg,#b5c8d8,#ccd8e8)',
+    'linear-gradient(135deg,#e8a090,#f2b5a5)',
+    'linear-gradient(135deg,#8fb2c8,#a8c5d5)',
+    'linear-gradient(135deg,#e89080,#f2a895)'
+  ];
+  const thumbGradientsDark = [
+    'linear-gradient(135deg,#1e3448,#253d52)',
+    'linear-gradient(135deg,#4a2a22,#5c382e)',
+    'linear-gradient(135deg,#1a3040,#24404e)',
+    'linear-gradient(135deg,#4a2820,#5c3528)'
+  ];
+
+  let triggerEl = null;
+
+  function openModal(item, index) {
+    triggerEl = item;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const gradients = isDark ? thumbGradientsDark : thumbGradients;
+    modalImg.style.background = gradients[index] || gradients[0];
+    modalTitle.textContent = item.dataset.projectTitle || '';
+    modalTag.textContent = item.dataset.projectTag || '';
+    modalDesc.textContent = item.dataset.projectDesc || '';
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (triggerEl) { triggerEl.focus(); triggerEl = null; }
+  }
+
+  // Focus trap inside modal
+  modal.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    const focusable = modal.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  document.querySelectorAll('.work-item').forEach((item, i) => {
+    item.addEventListener('click', () => openModal(item, i));
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(item, i); }
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+  });
+
+  // Close modal if CTA inside is clicked
+  modal.querySelector('.project-modal-cta').addEventListener('click', closeModal);
+})();
+
+/* ── BACK TO TOP ── */
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  backToTop.classList.toggle('visible', scrollY > 600);
+}, { passive: true });
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ── FORM FEEDBACK ── */
+const formToast = document.getElementById('formToast');
+function showToast(message) {
+  formToast.textContent = message;
+  formToast.classList.add('show');
+  setTimeout(() => formToast.classList.remove('show'), 3000);
+}
+
+// Contact form
+document.querySelector('.contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('button[type="submit"]');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  setTimeout(() => {
+    showToast('✓ Mensaje enviado. Te respondemos pronto.');
+    this.reset();
+    btn.textContent = 'Enviar mensaje →';
+    btn.disabled = false;
+  }, 800);
+});
+
+// CTA email form
+document.querySelector('.cta-email-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('button[type="submit"]');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  setTimeout(() => {
+    showToast('✓ ¡Recibido! Te contactamos pronto.');
+    this.reset();
+    btn.textContent = 'Escríbenos →';
+    btn.disabled = false;
+  }, 800);
+});
+
+/* ══ SERVICE DETAIL MODAL ══ */
+(function() {
+  const SVC_DATA = {
+    web: {
+      title: 'Web',
+      url: 'compassagency.com/services/web',
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8614a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>',
+      priceSummary: 'Desde $400 — sitios, e-commerce, landing pages',
+      sections: [
+        { title: 'Qué incluye', items: ['Diseño UI personalizado (no templates)', 'Desarrollo responsive (mobile-first)', 'Integración CMS (WordPress, Webflow o headless)', 'Optimización SEO on-page básica', 'Hosting setup + dominio (1er año)'] },
+        { title: 'Tiempo estimado', items: ['Landing page: 1 – 2 semanas', 'Sitio corporativo: 3 – 5 semanas', 'E-Commerce: 5 – 8 semanas', 'Mantenimiento: retainer mensual'] },
+        { title: 'Proceso', items: ['1. Brief + discovery call (gratis)', '2. Wireframes y prototipo navegable', '3. Diseño visual + revisiones (2 rondas)', '4. Desarrollo front/back + QA', '5. Lanzamiento + capacitación'] },
+        { title: 'Entregables', items: ['Sitio web live en tu dominio', 'Archivos fuente (Figma)', 'Guía de uso del CMS', 'Checklist SEO + performance audit', 'Soporte post-lanzamiento (30 días)'] }
+      ]
+    },
+    branding: {
+      title: 'UI / Branding',
+      url: 'compassagency.com/services/branding',
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="#e8614a"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/></svg>',
+      priceSummary: 'Desde $200 — identidad, UI/UX, guías de marca',
+      sections: [
+        { title: 'Qué incluye', items: ['Logo principal + variaciones (mono, icono)', 'Paleta de colores + tipografías', 'Sistema de componentes UI (si aplica)', 'Mockups de aplicación en contexto', 'Materiales digitales: tarjetas, banners, social'] },
+        { title: 'Tiempo estimado', items: ['Guía de marca: 1 – 2 semanas', 'Identidad visual completa: 3 – 4 semanas', 'UI/UX para app: 4 – 6 semanas', 'Materiales de campaña: 1 semana'] },
+        { title: 'Proceso', items: ['1. Cuestionario de marca + moodboard', '2. Exploración visual (3 direcciones)', '3. Refinamiento de la dirección elegida', '4. Sistema completo + aplicaciones', '5. Entrega final + manual de uso'] },
+        { title: 'Entregables', items: ['Brandbook / manual de marca (PDF)', 'Archivos vectoriales (AI, SVG, EPS)', 'Kit digital para redes sociales', 'Archivos Figma editables', 'Licencias de tipografías (si compradas)'] }
+      ]
+    },
+    media: {
+      title: 'Media / Drone',
+      url: 'compassagency.com/services/media',
+      icon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8614a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></svg>',
+      priceSummary: 'Desde $250 — video, drone, foto, reels',
+      sections: [
+        { title: 'Qué incluye', items: ['Video corporativo / comercial (hasta 90s)', 'Tomas aéreas 4K con dron (FAA certified)', 'Sesión fotográfica profesional', 'Edición + color grading cinematográfico', 'Versiones optimizadas para redes'] },
+        { title: 'Tiempo estimado', items: ['Reel para redes: 3 – 5 días', 'Video corporativo: 1 – 2 semanas', 'Sesión fotográfica: 1 día shoot + 1 semana edición', 'Tomas drone: 1 día + 3 – 5 días post'] },
+        { title: 'Proceso', items: ['1. Pre-producción: concepto + storyboard', '2. Coordinación de locación + logística', '3. Día(s) de rodaje / sesión', '4. Post-producción + revisiones (2 rondas)', '5. Entrega en formatos finales'] },
+        { title: 'Entregables', items: ['Video master (4K + 1080p)', 'Cortes para redes (9:16, 1:1, 16:9)', 'Fotos editadas en alta resolución', 'RAW files (bajo solicitud)', 'Licencia de uso comercial incluida'] }
+      ]
+    }
+  };
+
+  const modal     = document.getElementById('svcModal');
+  const panel     = modal.querySelector('.svc-modal-panel');
+  const closeBtn  = document.getElementById('svcModalClose');
+  const urlEl     = document.getElementById('svcModalUrl');
+  const iconEl    = document.getElementById('svcModalIcon');
+  const titleEl   = document.getElementById('svcModalTitle');
+  const priceEl   = document.getElementById('svcModalPriceSummary');
+  const gridEl    = document.getElementById('svcModalGrid');
+  let   trigger   = null;
+
+  function populate(key) {
+    const d = SVC_DATA[key];
+    if (!d) return;
+    urlEl.textContent  = d.url;
+    iconEl.innerHTML   = d.icon;
+    titleEl.textContent = d.title;
+    priceEl.textContent = d.priceSummary;
+    gridEl.innerHTML = d.sections.map(s =>
+      `<div class="svc-modal-section"><h4>${s.title}</h4><ul>${s.items.map(i => `<li>${i}</li>`).join('')}</ul></div>`
+    ).join('');
+  }
+
+  function openModal(card) {
+    const key = card.dataset.service;
+    if (!key) return;
+    trigger = card;
+    populate(key);
+
+    // Try View Transitions API, fallback to normal
+    const show = () => {
+      modal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      panel.scrollTop = 0;
+      closeBtn.focus();
+    };
+    if (document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.startViewTransition(show);
+    } else {
+      show();
+    }
+  }
+
+  function closeModal() {
+    const hide = () => {
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+      if (trigger) { trigger.focus(); trigger = null; }
+    };
+    if (document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.startViewTransition(hide);
+    } else {
+      hide();
+    }
+  }
+
+  // Open on click / Enter / Space
+  document.querySelectorAll('.service-card[data-service]').forEach(card => {
+    card.addEventListener('click', () => openModal(card));
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card); }
+    });
+  });
+
+  // Close
+  closeBtn.addEventListener('click', closeModal);
+  modal.querySelector('.svc-modal-backdrop').addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+  });
+
+  // Focus trap
+  panel.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    const focusable = panel.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
+
+/* ── HERO CARDS — subtle tilt (pointer devices only) ── */
+if (window.matchMedia('(hover: hover)').matches) {
+  document.querySelectorAll('.hero-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform =
+        `perspective(800px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) translateY(-2px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.transition = 'transform .4s cubic-bezier(0.2,0.8,0.2,1)';
+      setTimeout(() => card.style.transition = '', 400);
+    });
+  });
+}
+</script>
+</body>
+</html>
