@@ -1,84 +1,3 @@
-/* ─── NorthCode Logo & Icons ─── */
-export function NorthCodeIcon({ size = 32, className = '', color = 'currentColor', accent = '#e8614a' }) {
-  return (
-    <svg
-      viewBox="0 0 80 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      style={{ width: size, height: size }}
-      aria-label="NorthCode"
-      role="img"
-    >
-      <g transform="translate(2,2)">
-        <path d="M8.2,38 A30,30 0 0,1 38,8.2" stroke={color} strokeWidth="4" strokeLinecap="round" fill="none" />
-        <path d="M38,69.8 A30,30 0 0,1 8.2,38" stroke={color} strokeWidth="4" strokeLinecap="round" fill="none" />
-        <path d="M69.8,38 A30,30 0 0,1 38,69.8" stroke={color} strokeWidth="4" strokeLinecap="round" fill="none" />
-        <path d="M38,8.2 A30,30 0 0,1 69.8,38" stroke={accent} strokeWidth="4" strokeLinecap="round" fill="none" />
-        <path d="M13,52 A26,26 0 0,1 11,44" stroke={accent} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity=".8" />
-        <circle cx="38" cy="8" r="3.2" fill={color} />
-        <circle cx="69.8" cy="38" r="3.2" fill={accent} />
-        <circle cx="8" cy="38" r="3.2" fill={color} />
-        <circle cx="38" cy="70" r="3.2" fill={color} />
-        <polygon points="38,9 49,43 38,37 27,43" fill="url(#nci-grad)" />
-        <polygon points="38,9 39,40 38,37 37,40" fill="#c44a36" opacity=".5" />
-        <g transform="translate(38,56)" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <polyline points="-8,-5 -13,0 -8,5" />
-          <polyline points="8,-5 13,0 8,5" />
-          <line x1="3" y1="-6" x2="-3" y2="6" />
-        </g>
-        <defs>
-          <linearGradient id="nci-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={accent} />
-            <stop offset="100%" stopColor="#d4553f" />
-          </linearGradient>
-        </defs>
-      </g>
-    </svg>
-  );
-}
-
-export function NorthCodeLogo({ size = 36, className = '', color = 'currentColor', accent = '#e8614a' }) {
-  return (
-    <svg
-      viewBox="0 0 310 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      style={{ height: size, width: 'auto' }}
-      aria-label="NorthCode"
-      role="img"
-    >
-      <g transform="translate(2,2)">
-        <path d="M8.2,38 A30,30 0 0,1 38,8.2" stroke={color} strokeWidth="4" strokeLinecap="round" fill="none" />
-        <path d="M38,69.8 A30,30 0 0,1 8.2,38" stroke={color} strokeWidth="4" strokeLinecap="round" fill="none" />
-        <path d="M69.8,38 A30,30 0 0,1 38,69.8" stroke={color} strokeWidth="4" strokeLinecap="round" fill="none" />
-        <path d="M38,8.2 A30,30 0 0,1 69.8,38" stroke={accent} strokeWidth="4" strokeLinecap="round" fill="none" />
-        <path d="M13,52 A26,26 0 0,1 11,44" stroke={accent} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity=".8" />
-        <circle cx="38" cy="8" r="3.2" fill={color} />
-        <circle cx="69.8" cy="38" r="3.2" fill={accent} />
-        <circle cx="8" cy="38" r="3.2" fill={color} />
-        <circle cx="38" cy="70" r="3.2" fill={color} />
-        <polygon points="38,9 49,43 38,37 27,43" fill="url(#nc-needle-grad-logo)" />
-        <polygon points="38,9 39,40 38,37 37,40" fill="#c44a36" opacity=".5" />
-        <g transform="translate(38,56)" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <polyline points="-8,-5 -13,0 -8,5" />
-          <polyline points="8,-5 13,0 8,5" />
-          <line x1="3" y1="-6" x2="-3" y2="6" />
-        </g>
-        <defs>
-          <linearGradient id="nc-needle-grad-logo" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={accent} />
-            <stop offset="100%" stopColor="#d4553f" />
-          </linearGradient>
-        </defs>
-      </g>
-      <text x="92" y="34" fontFamily="var(--font-logo)" fontSize="27" fontWeight="700" letterSpacing="1.2" fill={color}>NORTH</text>
-      <text x="92" y="66" fontFamily="var(--font-logo)" fontSize="27" fontWeight="800" letterSpacing="1.2" fill={accent}>CODE</text>
-    </svg>
-  );
-}
-
 export function GlobeIcon({ size = 28, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
@@ -145,12 +64,12 @@ export function GearIcon({ size = 20, className = '' }) {
 
 export function ServiceIcon({ type, size = 28, className = '' }) {
   switch (type) {
-    case 'globe': return <GlobeIcon size={size} className={className} />;
-    case 'web': return <GlobeIcon size={size} className={className} />;
-    case 'star': return <StarIcon size={size} className={className} />;
-    case 'branding': return <StarIcon size={size} className={className} />;
+    case 'globe':   return <GlobeIcon size={size} className={className} />;
+    case 'web':     return <GlobeIcon size={size} className={className} />;
+    case 'star':    return <StarIcon size={size} className={className} />;
+    case 'branding':return <StarIcon size={size} className={className} />;
     case 'desktop': return <DesktopAppIcon size={size} className={className} />;
-    default: return null;
+    default:        return null;
   }
 }
 
@@ -165,12 +84,14 @@ export function BrowserDots() {
 }
 
 export function BrowserUrlBar({ url, size = 'sm' }) {
-  const iconSizePx = size === 'lg' ? 14 : 12;
+  const iconSize = size === 'lg' ? 'w-3.5 h-3.5' : 'w-3 h-3';
   const textSize = size === 'lg' ? 'text-[.72rem]' : 'text-[.65rem]';
   const padding = size === 'lg' ? 'py-1.5 px-4' : 'py-1 px-3';
   return (
-    <div className={`flex-1 flex items-center gap-2 bg-white/[.06] rounded-lg ${padding} ${textSize} text-white/50 tracking-wide whitespace-nowrap overflow-hidden text-ellipsis`}>
-      <NorthCodeIcon size={iconSizePx} className="shrink-0 opacity-80" color="currentColor" />
+    <div className={`flex-1 flex items-center gap-2 bg-[var(--color-card-bg)] rounded-lg ${padding} ${textSize} text-[var(--color-muted)] tracking-wide whitespace-nowrap overflow-hidden text-ellipsis`}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`${iconSize} shrink-0 opacity-50`}>
+        <circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z" />
+      </svg>
       <span>{url}</span>
     </div>
   );
@@ -193,6 +114,117 @@ export function CompassSvg() {
   );
 }
 
+/* ─── NorthCode Logo ─── */
+export function NorthCodeLogo({ size = 36, className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 310 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      style={{ height: size, width: 'auto' }}
+      aria-label="NorthCode"
+      role="img"
+    >
+      {/* Compass icon — centered at 40,40 within 80x80 area */}
+      <g transform="translate(2,2)">
+        {/* Navy ring segments (3 quarters: top-left, bottom-left, bottom-right) */}
+        {/* Top-left arc: 9 o'clock to 12 o'clock */}
+        <path d="M8.2,38 A30,30 0 0,1 38,8.2" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
+        {/* Bottom-left arc: 6 o'clock to 9 o'clock */}
+        <path d="M38,69.8 A30,30 0 0,1 8.2,38" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
+        {/* Bottom-right arc: 3 o'clock to 6 o'clock */}
+        <path d="M69.8,38 A30,30 0 0,1 38,69.8" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
+
+        {/* Coral arc: top-right quarter (12 o'clock to 3 o'clock) */}
+        <path d="M38,8.2 A30,30 0 0,1 69.8,38" stroke="#e8614a" strokeWidth="4" strokeLinecap="round" fill="none" />
+
+        {/* Small coral accent line — bottom-left inside */}
+        <path d="M13,52 A26,26 0 0,1 11,44" stroke="#e8614a" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity=".8" />
+
+        {/* Junction dots at cardinal points */}
+        <circle cx="38" cy="8" r="3.2" fill="#1a3a5c" />
+        <circle cx="69.8" cy="38" r="3.2" fill="#e8614a" />
+        <circle cx="8" cy="38" r="3.2" fill="#1a3a5c" />
+        <circle cx="38" cy="70" r="3.2" fill="#1a3a5c" />
+
+        {/* Needle — coral arrow pointing up */}
+        <polygon points="38,9 49,43 38,37 27,43" fill="url(#nc-needle-grad)" />
+        {/* Needle shadow/fold line */}
+        <polygon points="38,9 39,40 38,37 37,40" fill="#c44a36" opacity=".5" />
+
+        {/* </> code symbol at bottom center */}
+        <g transform="translate(38,56)" stroke="#1a3a5c" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none">
+          <polyline points="-8,-5 -13,0 -8,5" />
+          <polyline points="8,-5 13,0 8,5" />
+          <line x1="3" y1="-6" x2="-3" y2="6" />
+        </g>
+
+        {/* Gradient for needle */}
+        <defs>
+          <linearGradient id="nc-needle-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#e8614a" />
+            <stop offset="100%" stopColor="#d4553f" />
+          </linearGradient>
+        </defs>
+      </g>
+
+      {/* Text — NORTH */}
+      <text x="92" y="34" fontFamily="var(--ff-heading), 'Geist', sans-serif" fontSize="27" fontWeight="700" letterSpacing="2.5" fill="#1a3a5c">
+        NORTH
+      </text>
+      {/* Text — CODE */}
+      <text x="92" y="66" fontFamily="var(--ff-heading), 'Geist', sans-serif" fontSize="27" fontWeight="800" letterSpacing="2.5" fill="#e8614a">
+        CODE
+      </text>
+    </svg>
+  );
+}
+
+export function NorthCodeIcon({ size = 32, className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      style={{ width: size, height: size }}
+      aria-label="NorthCode"
+      role="img"
+    >
+      <g transform="translate(2,2)">
+        {/* Navy ring segments */}
+        <path d="M8.2,38 A30,30 0 0,1 38,8.2" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
+        <path d="M38,69.8 A30,30 0 0,1 8.2,38" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
+        <path d="M69.8,38 A30,30 0 0,1 38,69.8" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
+        {/* Coral arc */}
+        <path d="M38,8.2 A30,30 0 0,1 69.8,38" stroke="#e8614a" strokeWidth="4" strokeLinecap="round" fill="none" />
+        {/* Accent */}
+        <path d="M13,52 A26,26 0 0,1 11,44" stroke="#e8614a" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity=".8" />
+        {/* Junction dots */}
+        <circle cx="38" cy="8" r="3.2" fill="#1a3a5c" />
+        <circle cx="69.8" cy="38" r="3.2" fill="#e8614a" />
+        <circle cx="8" cy="38" r="3.2" fill="#1a3a5c" />
+        <circle cx="38" cy="70" r="3.2" fill="#1a3a5c" />
+        {/* Needle */}
+        <polygon points="38,9 49,43 38,37 27,43" fill="url(#nci-grad)" />
+        <polygon points="38,9 39,40 38,37 37,40" fill="#c44a36" opacity=".5" />
+        {/* </> code symbol */}
+        <g transform="translate(38,56)" stroke="#1a3a5c" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none">
+          <polyline points="-8,-5 -13,0 -8,5" />
+          <polyline points="8,-5 13,0 8,5" />
+          <line x1="3" y1="-6" x2="-3" y2="6" />
+        </g>
+        <defs>
+          <linearGradient id="nci-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#e8614a" />
+            <stop offset="100%" stopColor="#d4553f" />
+          </linearGradient>
+        </defs>
+      </g>
+    </svg>
+  );
+}
 
 export function SectionEyebrow({ children, className = '' }) {
   return (

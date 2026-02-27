@@ -316,10 +316,10 @@ export default function Work() {
               </div>
               {/* Meta information always visible */}
               <div className="px-4 py-4 bg-[var(--color-card-bg)] dark:bg-[var(--color-cream)]/5 border-t border-[var(--color-border)]">
-                <p className="text-[.85rem] font-bold text-[var(--color-ink)] dark:text-white">{proj.meta.title}</p>
+                <p className="text-[.85rem] font-bold text-[var(--color-ink)]">{proj.meta.title}</p>
                 <p className="text-[.75rem] text-[var(--color-coral)] font-medium mt-0.5">{proj.meta.sub}</p>
                 {proj.summary && (
-                  <p className="text-[.75rem] text-[var(--color-ink)]/75 dark:text-white/55 mt-2 leading-snug line-clamp-2">{proj.summary}</p>
+                  <p className="text-[.75rem] text-[var(--color-ink)] opacity-75 mt-2 leading-snug line-clamp-2">{proj.summary}</p>
                 )}
               </div>
             </article>
