@@ -254,7 +254,6 @@ function ProjectModal({ project, isOpen, onClose }) {
 /* ─── Work Section ─── */
 export default function Work() {
   const [modalData, setModalData] = useState(null);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
   const containerRef = useRef(null);
 
   // Debug visibility
@@ -286,12 +285,10 @@ export default function Work() {
           {PROJECTS.map((proj, i) => (
             <article
               key={i}
-              className={`rounded-lg overflow-hidden relative cursor-pointer shadow-sm border border-transparent transition-all duration-300 hover:shadow-[var(--shadow-hover)] hover:border-[rgba(232,97,74,.15)] hover:-translate-y-1.5 group ${hoveredIndex !== null && hoveredIndex !== i ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100'}`}
+              className={"rounded-lg overflow-hidden relative cursor-pointer shadow-sm border border-transparent transition-all duration-300 hover:shadow-[var(--shadow-hover)] hover:border-[rgba(232,97,74,.15)] hover:-translate-y-1.5 group"}
               tabIndex={0}
               role="button"
               aria-label={`Ver detalle: ${proj.title}`}
-              onMouseEnter={() => setHoveredIndex(i)}
-              onMouseLeave={() => setHoveredIndex(null)}
               onClick={() => open(proj, i)}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(proj, i); } }}
             >
@@ -318,7 +315,7 @@ export default function Work() {
                 )}
               </div>
               {/* Meta information always visible */}
-              <div className="px-4 py-4 bg-[var(--color-card-bg)] dark:bg-[var(--color-cream)]/5 border-t border-[var(--color-border)]">
+              <div className="px-4 py-4 bg-[var(--color-card-bg)] dark:bg-[var(--color-cream)]/5 border-t border-[var(--color-border)] transition-opacity duration-300 group-hover:opacity-0">
                 <p className="text-[.85rem] font-bold text-[var(--color-ink)]">{proj.meta.title}</p>
                 <p className="text-[.75rem] text-[var(--color-coral)] font-medium mt-0.5">{proj.meta.sub}</p>
                 {proj.summary && (
