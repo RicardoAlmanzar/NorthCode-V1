@@ -82,19 +82,6 @@ Pricing is visible, the CTA is persistent, and the contact flow is frictionless.
 
 ---
 
-## Getting started
-
-```bash
-git clone https://github.com/RicardoAlmanzar/northcode
-cd northcode
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
----
-
 ## Engineering decisions worth noting
 
 **App Router over Pages Router.**  
