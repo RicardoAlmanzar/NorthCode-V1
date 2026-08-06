@@ -40,12 +40,12 @@ export default function CTA({ onToast }) {
             placeholder="tu@email.com"
             autoComplete="email"
             required
-            className="flex-1 px-5 py-3 rounded-full border border-[var(--color-border)] dark:border-white/[.18] bg-[var(--color-card-bg)] dark:bg-white/[.06] text-[var(--color-ink)] dark:text-white font-sans text-[.9rem] min-h-[44px] transition-all duration-300 ease-[cubic-bezier(.2,.8,.2,1)] focus:border-[var(--color-coral)] focus:shadow-[0_0_0_3px_rgba(232,97,74,.15)] focus:outline-none placeholder:text-[var(--color-muted)] dark:placeholder:text-white/50"
+            className="flex-1 px-5 py-3 rounded-full border border-[var(--color-border)] dark:border-white/[.18] bg-[var(--color-card-bg)] dark:bg-white/[.06] text-[var(--color-ink)] dark:text-white font-sans text-[.9rem] min-h-[44px] transition-all duration-300 ease-[cubic-bezier(.2,.8,.2,1)] focus:border-[var(--color-coral)] focus:shadow-[0_0_0_3px_rgba(222,108,58,.15)] focus:outline-none placeholder:text-[var(--color-muted)] dark:placeholder:text-white/50"
           />
           <button
             type="submit"
             disabled={sending}
-            className="btn-magnetic px-5 py-3 bg-[var(--color-coral)] border-none rounded-full text-white font-sans font-semibold text-[.88rem] cursor-pointer whitespace-nowrap min-h-[44px] shadow-[0_4px_16px_rgba(232,97,74,.3)] transition-all duration-300 ease-[cubic-bezier(.2,.8,.2,1)] hover:-translate-y-1 hover:shadow-[0_8px_28px_rgba(232,97,74,.45)] active:translate-y-0 active:scale-[.97] disabled:opacity-60"
+            className="btn-magnetic px-5 py-3 bg-[var(--color-coral)] border-none rounded-full text-white font-sans font-semibold text-[.88rem] cursor-pointer whitespace-nowrap min-h-[44px] shadow-[0_4px_16px_rgba(222,108,58,.3)] transition-all duration-300 ease-[cubic-bezier(.2,.8,.2,1)] hover:-translate-y-1 hover:shadow-[0_8px_28px_rgba(222,108,58,.45)] active:translate-y-0 active:scale-[.97] disabled:opacity-60"
           >
             {sending ? 'Enviando...' : 'Enviar →'}
           </button>

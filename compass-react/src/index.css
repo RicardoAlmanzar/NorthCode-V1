@@ -1,10 +1,16 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
 /* Theme variables (light = default). Kept in :root so [data-theme="dark"] can override. */
 :root {
   --color-ink: #0d1b2a;
   --color-cream: #f0f4f8;
-  --color-coral: #e8614a;
+  --color-coral: #de6c3a;
   --color-coral-lt: #f4a899;
   --color-navy: #1a3a5c;
   --color-muted: #4a5d6f;
@@ -14,9 +20,9 @@
   --color-success: #10b981;
   --color-success-bg: #ecfdf5;
 
-  --font-heading: 'Playfair Display', Georgia, serif;
-  --font-logo: 'Outfit', 'Geist', sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-logo: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: .5rem;
   --radius-md: .75rem;
@@ -31,7 +37,7 @@
   --ease-smooth: cubic-bezier(.4, 0, .2, 1);
   --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
   /* per-service accents */
-  --svc-web: #e8614a;
+  --svc-web: #de6c3a;
   --svc-branding: #7c3aed;
   --svc-desktop: #60a5fa;
 }
@@ -92,7 +98,7 @@ body.modal-open {
 }
 
 .form-step-content h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
   font-weight: 900;
   font-size: 2.4rem;
   line-height: 1.15;
@@ -217,7 +223,7 @@ h4 {
 [data-theme="dark"] {
   --color-ink: #e8ecf0;
   --color-cream: #0f1923;
-  --color-coral: #f07462;
+  --color-coral: #de6c3a;
   --color-coral-lt: #f4a899;
   --color-navy: #a4c0d8;
   /* bumped from #8fa8bc → #a3b8c9 for ≥7:1 on #0f1923 (secondary text) */
@@ -321,12 +327,12 @@ h4 {
 ═══════════════════════════════════════ */
 /* Eyebrow — orange tenue */
 .hero-eyebrow {
-  color: rgba(232, 97, 74, .65) !important;
+  color: rgba(222, 108, 58, .65) !important;
 }
 
 /* bumped alpha .55→.75 for ≥4.5:1 on dark bg */
 [data-theme="dark"] .hero-eyebrow {
-  color: rgba(240, 116, 98, .75) !important;
+  color: rgba(222, 108, 58, .75) !important;
 }
 
 /* Title — inherits default ink/white color */
@@ -344,21 +350,21 @@ h4 {
 /* Subtitle — left orange border, softer color */
 .hero-subtitle {
   color: var(--color-muted) !important;
-  border-left: 2px solid rgba(232, 97, 74, .35) !important;
+  border-left: 2px solid rgba(222, 108, 58, .35) !important;
   padding-left: 1rem !important;
 }
 
 [data-theme="dark"] .hero-subtitle {
-  border-left-color: rgba(240, 116, 98, .30) !important;
+  border-left-color: rgba(222, 108, 58, .30) !important;
 }
 
 /* Primary button — stronger orange glow */
 .hero-btn-primary {
-  box-shadow: 0 4px 20px rgba(232, 97, 74, .30), 0 0 0 0 rgba(232, 97, 74, 0) !important;
+  box-shadow: 0 4px 20px rgba(222, 108, 58, .30), 0 0 0 0 rgba(222, 108, 58, 0) !important;
 }
 
 .hero-btn-primary:hover {
-  box-shadow: 0 8px 32px rgba(232, 97, 74, .50), 0 0 40px rgba(232, 97, 74, .15) !important;
+  box-shadow: 0 8px 32px rgba(222, 108, 58, .50), 0 0 40px rgba(222, 108, 58, .15) !important;
 }
 
 /* ═══════════════════════════════════════
@@ -378,7 +384,7 @@ h4 {
   --hc-bg-outer: #0e1a28;
   --hc-needle-s1: #1e3e5e;
   --hc-needle-s2: #0f1e30;
-  --hc-center-dot: #e8614a;
+  --hc-center-dot: #de6c3a;
 }
 
 .hero-compass-rose {
@@ -390,7 +396,7 @@ h4 {
 }
 
 [data-theme="dark"] .hero-compass-rose {
-  color: rgba(232, 97, 74, .5);
+  color: rgba(222, 108, 58, .5);
 }
 
 .hero-compass-letter {
@@ -401,7 +407,7 @@ h4 {
 }
 
 [data-theme="dark"] .hero-compass-letter {
-  fill: rgba(232, 97, 74, .55);
+  fill: rgba(222, 108, 58, .55);
 }
 
 /* N always stands out in coral in both themes */
@@ -415,7 +421,7 @@ h4 {
 }
 
 [data-theme="dark"] .hero-compass-letter-s {
-  fill: rgba(232, 97, 74, .4) !important;
+  fill: rgba(222, 108, 58, .4) !important;
 }
 
 /* Ghost compass — background rotating copy */
@@ -430,7 +436,7 @@ h4 {
 
 [data-theme="dark"] .hero-compass-ghost {
   opacity: .12;
-  filter: drop-shadow(0 2px 16px rgba(232, 97, 74, .08));
+  filter: drop-shadow(0 2px 16px rgba(222, 108, 58, .08));
 }
 
 @keyframes compass-ghost-spin {
@@ -466,7 +472,7 @@ h4 {
 }
 
 [data-theme="dark"] .hero-compass-glow {
-  background: radial-gradient(circle, rgba(232, 97, 74, .08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(222, 108, 58, .08) 0%, transparent 70%);
 }
 
 .hero-badge {
@@ -492,7 +498,7 @@ h4 {
 
 .hero-binary-digit {
   display: block;
-  font-family: 'DM Sans', monospace;
+  font-family: 'Merriweather', monospace;
   font-size: .72rem;
   line-height: 1;
   color: var(--color-muted);
@@ -501,7 +507,7 @@ h4 {
 }
 
 [data-theme="dark"] .hero-binary-digit {
-  color: rgba(232, 97, 74, .55);
+  color: rgba(222, 108, 58, .55);
   opacity: .40;
 }
 
@@ -544,11 +550,11 @@ h4 {
 
   0%,
   100% {
-    box-shadow: 0 4px 16px rgba(232, 97, 74, .25);
+    box-shadow: 0 4px 16px rgba(222, 108, 58, .25);
   }
 
   50% {
-    box-shadow: 0 6px 24px rgba(232, 97, 74, .40);
+    box-shadow: 0 6px 24px rgba(222, 108, 58, .40);
   }
 }
 
@@ -563,8 +569,8 @@ h4 {
 
   100% {
     opacity: 1;
-    border-color: rgba(232, 97, 74, .5);
-    box-shadow: 0 0 8px rgba(232, 97, 74, .4), 0 0 22px rgba(232, 97, 74, .18);
+    border-color: rgba(222, 108, 58, .5);
+    box-shadow: 0 0 8px rgba(222, 108, 58, .4), 0 0 22px rgba(222, 108, 58, .18);
     color: var(--color-coral);
   }
 }
@@ -606,7 +612,7 @@ h4 {
 }
 
 .timeline-step-line {
-  background: linear-gradient(to bottom, rgba(232, 97, 74, .3), rgba(255, 255, 255, .06)) top / 100% 0% no-repeat;
+  background: linear-gradient(to bottom, rgba(222, 108, 58, .3), rgba(255, 255, 255, .06)) top / 100% 0% no-repeat;
   animation: timeline-line-fill .8s ease forwards;
 }
 
@@ -650,8 +656,8 @@ h4 {
   }
 
   .timeline-step-circle {
-    border-color: rgba(232, 97, 74, .5);
-    box-shadow: 0 0 8px rgba(232, 97, 74, .4), 0 0 22px rgba(232, 97, 74, .18);
+    border-color: rgba(222, 108, 58, .5);
+    box-shadow: 0 0 8px rgba(222, 108, 58, .4), 0 0 22px rgba(222, 108, 58, .18);
     color: var(--color-coral);
   }
 }
@@ -815,7 +821,7 @@ h4 {
 }
 
 [data-theme="dark"] .compass-ring {
-  stroke: #e8614a;
+  stroke: #de6c3a;
   opacity: .5;
 }
 
@@ -827,7 +833,7 @@ h4 {
 }
 
 [data-theme="dark"] .compass-tick {
-  fill: #e8614a;
+  fill: #de6c3a;
   opacity: .45;
 }
 
@@ -848,7 +854,7 @@ h4 {
 }
 
 [data-theme="dark"] .compass-n {
-  fill: #e8614a;
+  fill: #de6c3a;
 }
 
 .compass-s {
@@ -859,7 +865,7 @@ h4 {
 }
 
 [data-theme="dark"] .compass-s {
-  fill: #e8614a;
+  fill: #de6c3a;
   opacity: .55;
 }
 
@@ -870,7 +876,7 @@ h4 {
 }
 
 [data-theme="dark"] .compass-center {
-  fill: #e8614a;
+  fill: #de6c3a;
 }
 
 .theme-toggle-svg {
@@ -880,7 +886,7 @@ h4 {
 }
 
 [data-theme="dark"] .theme-toggle-svg {
-  filter: drop-shadow(0 0 6px rgba(240, 116, 98, .45));
+  filter: drop-shadow(0 0 6px rgba(222, 108, 58, .45));
 }
 
 /* ═══════════════════════════════════════
@@ -1262,7 +1268,7 @@ footer {
 }
 
 .slider-arrow:hover {
-  background: rgba(232, 97, 74, .75);
+  background: rgba(222, 108, 58, .75);
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -1429,14 +1435,14 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(232, 97, 74, .35);
+  box-shadow: 0 4px 20px rgba(222, 108, 58, .35);
   transition: transform .3s cubic-bezier(.2, .8, .2, 1), opacity .25s ease, box-shadow .3s ease;
   touch-action: manipulation;
 }
 
 .chatbot-fab:hover {
   transform: scale(1.08) translateY(-2px);
-  box-shadow: 0 6px 28px rgba(232, 97, 74, .45);
+  box-shadow: 0 6px 28px rgba(222, 108, 58, .45);
 }
 
 .chatbot-fab:active {
@@ -1540,7 +1546,7 @@ footer {
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 2px solid rgba(232, 97, 74, .4);
+  border: 2px solid rgba(222, 108, 58, .4);
   animation: chatbot-pulse 2.5s ease-in-out infinite;
 }
 
@@ -1637,7 +1643,7 @@ footer {
 }
 
 .chatbot-close:hover {
-  background: rgba(232, 97, 74, .2);
+  background: rgba(222, 108, 58, .2);
   color: #fff;
 }
 
@@ -1715,7 +1721,7 @@ footer {
 .chatbot-chip:hover {
   border-color: var(--color-coral);
   color: var(--color-coral);
-  background: rgba(232, 97, 74, .06);
+  background: rgba(222, 108, 58, .06);
 }
 
 /* Footer */
@@ -1801,7 +1807,7 @@ footer {
 .chatbot-input:focus {
   outline: none;
   border-color: var(--color-coral);
-  box-shadow: 0 0 0 3px rgba(232, 97, 74, .12);
+  box-shadow: 0 0 0 3px rgba(222, 108, 58, .12);
 }
 
 .chatbot-input-error {
@@ -2000,13 +2006,13 @@ footer {
   border: none;
   background: var(--color-coral);
   color: #fff;
-  box-shadow: 0 4px 16px rgba(232, 97, 74, .2);
+  box-shadow: 0 4px 16px rgba(222, 108, 58, .2);
   transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s;
 }
 
 .wizard-btn-next:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(232, 97, 74, .35);
+  box-shadow: 0 8px 28px rgba(222, 108, 58, .35);
 }
 
 .wizard-btn-next:active {
@@ -2071,22 +2077,17 @@ footer {
 
 /* Fixed-size wizard card — outer dimensions never change between steps */
 .wiz-card-fixed {
-  /* Fixed height: tall enough for the longest step (Step 2 with textarea). */
   height: 560px;
-  /* Prevent growing/shrinking */
   flex-shrink: 0;
-  /* Flex column so stepper sits at top and scroll body fills the rest */
   display: flex;
   flex-direction: column;
-  padding: 1.25rem 1.25rem 1rem;
-  /* changed from hidden to visible so datepicker can overflow */
+  padding: 1rem 1.1rem 0.75rem;
   overflow: visible;
 }
 
 /* Stepper bar — fixed padding, never compressed */
 .wiz-stepper-bar {
-  /* Fixed bottom margin that matches the original mb-8 */
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.1rem;
   flex-shrink: 0;
 }
 
@@ -2094,8 +2095,9 @@ footer {
 .wiz-step-scroll {
   flex: 1 1 0%;
   min-height: 0;
-  /* changed from auto/hidden to visible so datepicker can overflow */
-  overflow: visible;
+  /* Scroll internally when content (+ error messages) overflows the fixed card height */
+  overflow-y: auto;
+  overflow-x: visible;
 }
 
 .wiz-step-scroll::-webkit-scrollbar {
@@ -2107,7 +2109,7 @@ footer {
 }
 
 .wiz-step-scroll::-webkit-scrollbar-thumb {
-  background: rgba(232, 97, 74, .35);
+  background: rgba(222, 108, 58, .35);
   border-radius: 4px;
 }
 
@@ -2117,7 +2119,7 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-bottom: .5rem;
+  padding-bottom: .25rem;
 }
 
 /* Responsive: on small screens, switch to full-width with dvh-based height */
@@ -2244,7 +2246,7 @@ footer {
   background-color: var(--color-coral) !important;
   color: #fff !important;
   font-weight: bold;
-  box-shadow: 0 4px 12px rgba(232, 97, 74, .3) !important;
+  box-shadow: 0 4px 12px rgba(222, 108, 58, .3) !important;
 }
 
 .northcode-calendar .react-datepicker__day--disabled {
@@ -2459,7 +2461,7 @@ footer {
   font-size: .68rem;
   font-weight: 700;
   letter-spacing: .1em;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Merriweather', monospace;
   width: fit-content;
 }
 
@@ -2573,7 +2575,7 @@ footer {
 
 /* Time pill */
 .svc-time-pill {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Merriweather', monospace;
   font-size: .66rem;
   font-weight: 500;
   padding: .2rem .55rem;
@@ -2657,3 +2659,180 @@ footer {
     opacity: 1;
   }
 }
+
+/* ═══════════════════════════════════════
+   HERO NEW — Digital Solutions redesign
+═══════════════════════════════════════ */
+
+/* Title entrance animation */
+@keyframes heroTitleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Laptop floating animation */
+@keyframes laptopFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+/* ── Section wrapper ── */
+.hero-new {
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background: #070b17;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+/* ── Very dark navy fill ── */
+.hero-new-bg {
+  position: absolute;
+  inset: 0;
+  background: #070b17;
+  z-index: 0;
+}
+
+/* ── Radial coral glow (behind laptop) ── */
+.hero-new-glow {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(400px, 55vw, 750px);
+  height: clamp(240px, 35vw, 450px);
+  background: radial-gradient(
+    ellipse 55% 55% at 50% 50%,
+    rgba(222, 108, 58, 0.14) 0%,
+    rgba(222, 108, 58, 0.04) 45%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50%;
+}
+
+/* ── Giant title ── */
+.hero-new-title-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding-bottom: 4vh;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-new-word {
+  display: block;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-weight: 900;
+  font-size: clamp(4.5rem, 15vw, 13.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.hero-new-word--digital {
+  color: #ffffff;
+}
+
+.hero-new-word--solutions {
+  color: var(--color-coral);
+}
+
+/* ── Laptop wrapper ── */
+.hero-new-laptop-wrap {
+  position: relative;
+  z-index: 3;
+  width: clamp(300px, 50vw, 680px);
+  margin-top: clamp(40px, 7vh, 90px);
+  flex-shrink: 0;
+}
+
+.hero-new-laptop-float {
+  animation: laptopFloat 5s ease-in-out infinite;
+  animation-delay: 1.8s;
+}
+
+.hero-laptop-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.80)) drop-shadow(0 0 35px rgba(222, 108, 58, 0.12));
+}
+
+/* ── Bottom content ── */
+.hero-new-bottom {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2.25rem;
+  padding: 0 1.25rem clamp(1rem, 3vh, 2rem);
+  max-width: 720px;
+}
+
+.hero-new-desc {
+  /* Override hero-subtitle border so it looks centred */
+  border-left: none !important;
+  padding-left: 0 !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: clamp(0.78rem, 0.95vw, 0.92rem);
+  max-width: 68ch;
+  line-height: 1.6;
+  margin-top: -0.75rem;
+}
+
+.hero-new-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ── Responsive: smaller title on mobile ── */
+@media (max-width: 640px) {
+  .hero-new-word {
+    font-size: clamp(3rem, 16vw, 5.5rem);
+    letter-spacing: -0.01em;
+  }
+
+  .hero-new-laptop-wrap {
+    width: 85vw;
+    margin-top: 40px;
+  }
+
+  .hero-new-glow {
+    width: 85vw;
+    height: 45vw;
+    top: 18%;
+  }
+}
+
+

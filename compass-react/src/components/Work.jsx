@@ -5,6 +5,7 @@ import { useScrollRevealAll, useInView } from '../hooks/useScrollReveal';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import Button from './ui/Button';
 import { SectionEyebrow } from './ui/Icons';
+import { CardContainer, CardBody, CardItem } from './ui/3d-card';
 
 /* ─── Image Slider ─── */
 function ProjectSlider({ slides, mobile }) {
@@ -216,7 +217,7 @@ function ProjectModal({ project, isOpen, onClose }) {
         <button
           ref={closeBtnRef}
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-10 h-10 border-none rounded-full bg-[rgba(13,27,42,.08)] dark:bg-[rgba(240,244,248,.1)] text-[var(--color-ink)] text-2xl leading-none cursor-pointer flex items-center justify-center transition-[background-color,transform] duration-200 hover:bg-[rgba(232,97,74,.15)] hover:scale-110"
+          className="absolute top-4 right-4 z-10 w-10 h-10 border-none rounded-full bg-[rgba(13,27,42,.08)] dark:bg-[rgba(240,244,248,.1)] text-[var(--color-ink)] text-2xl leading-none cursor-pointer flex items-center justify-center transition-[background-color,transform] duration-200 hover:bg-[rgba(222,108,58,.15)] hover:scale-110"
           aria-label="Cerrar detalle"
         >
           &times;
@@ -236,7 +237,7 @@ function ProjectModal({ project, isOpen, onClose }) {
             />
           )}
           <div className="flex-1 px-12 py-16 max-md:px-5 max-md:py-10 flex flex-col justify-center gap-4 bg-[var(--color-card-bg)] dark:bg-[#0f1923]">
-            <p className="text-[.75rem] uppercase tracking-[.1em] text-[#e8614a] font-bold">{displayProject.tag}</p>
+            <p className="text-[.75rem] uppercase tracking-[.1em] text-[#de6c3a] font-bold">{displayProject.tag}</p>
             <h3 className="font-heading text-[clamp(1.5rem,2.5vw,2rem)] font-black leading-[1.2] text-[#0d1b2a] dark:text-[#e8ecf0]">{displayProject.title}</h3>
             <p className="text-[1rem] leading-[1.6] text-[#4a5d6f] dark:text-[#a3b8c9]">{displayProject.desc}</p>
             <div className="mt-6">
@@ -283,46 +284,44 @@ export default function Work() {
 
         <div className="grid grid-cols-2 max-md:grid-cols-1 gap-6 max-w-[1100px] mx-auto">
           {PROJECTS.map((proj, i) => (
-            <article
-              key={i}
-              className={"rounded-lg overflow-hidden relative cursor-pointer shadow-sm border border-transparent transition-all duration-300 hover:shadow-[var(--shadow-hover)] hover:border-[rgba(232,97,74,.15)] hover:-translate-y-1.5 group"}
-              tabIndex={0}
-              role="button"
-              aria-label={`Ver detalle: ${proj.title}`}
-              onClick={() => open(proj, i)}
-              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(proj, i); } }}
-            >
-              <div
-                className="w-full aspect-video will-change-transform backface-hidden transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-[1.04] overflow-hidden"
-                style={{ background: proj.gradient }}
+            <CardContainer key={i} containerClassName="w-full">
+              <CardBody
+                className="w-full rounded-lg overflow-hidden relative cursor-pointer shadow-sm border border-transparent transition-all duration-300 hover:shadow-[var(--shadow-hover)] hover:border-[rgba(222,108,58,.15)] group"
+                tabIndex={0}
+                role="button"
+                aria-label={`Ver detalle: ${proj.title}`}
+                onClick={() => open(proj, i)}
+                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(proj, i); } }}
               >
-                {proj.thumb && (
-                  <img
-                    src={proj.thumb}
-                    alt={proj.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    draggable={false}
-                  />
-                )}
-              </div>
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[rgba(13,27,42,.85)] via-[rgba(13,27,42,.25)] to-transparent flex flex-col justify-end p-5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-350 text-white">
-                <p className="font-heading text-[1.05rem] font-bold translate-y-3 group-hover:translate-y-0 transition-transform duration-400 ease-[cubic-bezier(.2,.8,.2,1)]">{proj.title}</p>
-                <p className="text-[.75rem] text-[var(--color-coral-lt)] mt-1 uppercase tracking-[.08em] translate-y-3 group-hover:translate-y-0 transition-transform duration-400 ease-[cubic-bezier(.2,.8,.2,1)] delay-75">{proj.tag}</p>
-                {proj.summary && (
-                  <p className="text-[.78rem] text-white/70 mt-2 leading-snug line-clamp-2 translate-y-3 group-hover:translate-y-0 transition-[transform,opacity] duration-400 ease-[cubic-bezier(.2,.8,.2,1)] delay-100">{proj.summary}</p>
-                )}
-              </div>
-              {/* Meta information always visible */}
-              <div className="px-4 py-4 bg-[var(--color-card-bg)] dark:bg-[var(--color-cream)]/5 border-t border-[var(--color-border)] transition-opacity duration-300 group-hover:opacity-0">
-                <p className="text-[.85rem] font-bold text-[var(--color-ink)]">{proj.meta.title}</p>
-                <p className="text-[.75rem] text-[var(--color-coral)] font-medium mt-0.5">{proj.meta.sub}</p>
-                {proj.summary && (
-                  <p className="text-[.75rem] text-[var(--color-ink)] opacity-75 mt-2 leading-snug line-clamp-2">{proj.summary}</p>
-                )}
-              </div>
-            </article>
+                <CardItem translateZ="20" className="w-full aspect-video will-change-transform backface-hidden transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-[1.04] overflow-hidden" style={{ background: proj.gradient }}>
+                  {proj.thumb && (
+                    <img
+                      src={proj.thumb}
+                      alt={proj.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      draggable={false}
+                    />
+                  )}
+                </CardItem>
+                {/* Overlay — mismo contenido que el bloque inferior, levemente más grande */}
+                <CardItem translateZ="40" className="absolute inset-0 w-full h-full bg-gradient-to-t from-[rgba(13,27,42,.88)] via-[rgba(13,27,42,.25)] to-transparent flex flex-col justify-end p-5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-350 text-white">
+                  <p className="font-heading text-[1.1rem] font-bold translate-y-3 group-hover:translate-y-0 transition-transform duration-400 ease-[cubic-bezier(.2,.8,.2,1)]">{proj.meta.title}</p>
+                  <p className="text-[.8rem] text-[var(--color-coral)] mt-1 font-medium translate-y-3 group-hover:translate-y-0 transition-transform duration-400 ease-[cubic-bezier(.2,.8,.2,1)] delay-75">{proj.meta.sub}</p>
+                  {proj.summary && (
+                    <p className="text-[.82rem] text-white/75 mt-2 leading-snug line-clamp-2 translate-y-3 group-hover:translate-y-0 transition-[transform,opacity] duration-400 ease-[cubic-bezier(.2,.8,.2,1)] delay-100">{proj.summary}</p>
+                  )}
+                </CardItem>
+                {/* Meta information always visible */}
+                <CardItem translateZ="10" className="px-4 py-4 w-full bg-[var(--color-card-bg)] dark:bg-[var(--color-cream)]/5 border-t border-[var(--color-border)] transition-opacity duration-300 group-hover:opacity-0">
+                  <p className="text-[.85rem] font-bold text-[var(--color-ink)]">{proj.meta.title}</p>
+                  <p className="text-[.75rem] text-[var(--color-coral)] font-medium mt-0.5">{proj.meta.sub}</p>
+                  {proj.summary && (
+                    <p className="text-[.75rem] text-[var(--color-ink)] opacity-75 mt-2 leading-snug line-clamp-2">{proj.summary}</p>
+                  )}
+                </CardItem>
+              </CardBody>
+            </CardContainer>
           ))}
         </div>
       </section>

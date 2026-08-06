@@ -1,6 +1,6 @@
 /* ─── Chatbot Configuration ─── */
 
-export const WHATSAPP_NUMBER = '18299727697'; // formato internacional sin +
+export const WHATSAPP_NUMBER = '18098410101'; // formato internacional sin +
 export const FORM_ENDPOINT = 'https://formspree.io/f/xykdoqdo'; // URL de Formspree (ej: https://formspree.io/f/xabcd)
 
 export const WHATSAPP_DEFAULT_MESSAGE =

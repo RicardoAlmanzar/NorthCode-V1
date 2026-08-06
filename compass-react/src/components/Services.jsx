@@ -3,6 +3,8 @@ import { SERVICES, SVC_DETAIL } from '../data/content';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { ServiceIcon, BrowserDots, BrowserUrlBar, SectionEyebrow, CodeIcon, BrushIcon, DatabaseIcon, GearIcon } from './ui/Icons';
+import { CardContainer, CardBody, CardItem } from './ui/3d-card';
+import { FocusCards } from './ui/focus-cards';
 
 /* ─── Decorative background SVGs per service card ─── */
 const SERVICE_DECOR = {
@@ -49,55 +51,57 @@ const SCOPE_ICON_POOL = [
   <DatabaseIcon key="d" size={18} />,
   <GearIcon key="g" size={18} />,
 ];
-const SCOPE_COLOR_POOL = ['#e8614a', '#7c3aed', '#06b6d4', '#60a5fa'];
+const SCOPE_COLOR_POOL = ['#de6c3a', '#7c3aed', '#06b6d4', '#60a5fa'];
 
 /* ─── Service Card ─── */
 function ServiceCard({ service, onOpenDetail, stagger }) {
   return (
-    <div
-      className={`reveal stagger-${stagger} border border-white/[.08] bg-white/[.04] rounded-lg overflow-hidden relative cursor-pointer transition-[transform,border-color,background-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] hover:shadow-[0_10px_28px_rgba(0,0,0,.22)] group`}
-      style={{ borderBottom: `2px solid ${service.key === 'web' ? 'var(--color-coral)' : service.key === 'branding' ? '#7c3aed' : '#60a5fa'}` }}
-      tabIndex={0}
-      role="button"
-      aria-label={`${service.name} — Ver detalles`}
-      data-service={service.key}
-      onClick={() => onOpenDetail(service.key)}
-      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenDetail(service.key); } }}
-    >
-      {/* Hover overlay */}
-      <div className="absolute inset-0 z-[2] flex items-end justify-center pb-6 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-350 pointer-events-none rounded-[inherit]" aria-hidden="true">
-        <span className="inline-flex items-center gap-2 bg-[var(--color-coral)] text-white text-[.78rem] font-semibold tracking-[.04em] px-5 py-2 rounded-full shadow-[0_4px_16px_rgba(232,97,74,.35)] translate-y-2 group-hover:translate-y-0 group-focus-visible:translate-y-0 transition-transform duration-400 ease-[cubic-bezier(.2,.8,.2,1)]">
-          Ver más →
-        </span>
-      </div>
-      {/* Browser bar */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-white/[.04] border-b border-white/[.06]">
-        <BrowserDots />
-        <BrowserUrlBar url={service.url} isDark={true} />
-      </div>
-      {/* Body */}
-      <div className="p-5 pb-6">
-        <div className="text-[1.3rem] mb-4" aria-hidden="true">
-          {(() => {
-            const svcColor = service.key === 'web' ? 'var(--color-coral)' : service.key === 'branding' ? '#7c3aed' : '#60a5fa';
-            return (
-              <div style={{ color: svcColor }}>
-                <ServiceIcon type={service.icon} />
-              </div>
-            );
-          })()}
-        </div>
-        <h3 className="font-heading text-[1.15rem] mb-3 text-white">{service.name}</h3>
-        <ul className="list-none">
-          {service.items.map((item, j) => (
-            <li key={j} className="text-[.82rem] text-white/55 py-2 border-b border-white/[.05] last:border-b-0 flex justify-between items-center">
-              {item.label}
-              <span className="text-[.75rem] text-[var(--color-coral)] font-medium">{item.price}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <CardContainer containerClassName={`reveal stagger-${stagger} w-full`}>
+      <CardBody
+        className="w-full border border-white/[.08] bg-white/[.04] rounded-lg overflow-hidden relative cursor-pointer transition-[transform,border-color,background-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] hover:shadow-[0_10px_28px_rgba(0,0,0,.22)] group"
+        style={{ borderBottom: `2px solid ${service.key === 'web' ? 'var(--color-coral)' : service.key === 'branding' ? '#7c3aed' : '#60a5fa'}` }}
+        tabIndex={0}
+        role="button"
+        aria-label={`${service.name} — Ver detalles`}
+        data-service={service.key}
+        onClick={() => onOpenDetail(service.key)}
+        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenDetail(service.key); } }}
+      >
+        {/* Hover overlay */}
+        <CardItem translateZ="30" className="absolute inset-0 z-[2] w-full flex items-end justify-center pb-6 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-350 pointer-events-none rounded-[inherit]" aria-hidden="true">
+          <span className="inline-flex items-center gap-2 bg-[var(--color-coral)] text-white text-[.78rem] font-semibold tracking-[.04em] px-5 py-2 rounded-full shadow-[0_4px_16px_rgba(222,108,58,.35)] translate-y-2 group-hover:translate-y-0 group-focus-visible:translate-y-0 transition-transform duration-400 ease-[cubic-bezier(.2,.8,.2,1)]">
+            Ver más →
+          </span>
+        </CardItem>
+        {/* Browser bar */}
+        <CardItem translateZ="15" className="w-full flex items-center gap-3 px-4 py-3 bg-white/[.04] border-b border-white/[.06]">
+          <BrowserDots />
+          <BrowserUrlBar url={service.url} isDark={true} />
+        </CardItem>
+        {/* Body */}
+        <CardItem translateZ="25" className="w-full p-5 pb-6">
+          <div className="text-[1.3rem] mb-4" aria-hidden="true">
+            {(() => {
+              const svcColor = service.key === 'web' ? 'var(--color-coral)' : service.key === 'branding' ? '#7c3aed' : '#60a5fa';
+              return (
+                <div style={{ color: svcColor }}>
+                  <ServiceIcon type={service.icon} />
+                </div>
+              );
+            })()}
+          </div>
+          <h3 className="font-heading text-[1.15rem] mb-3 text-white">{service.name}</h3>
+          <ul className="list-none w-full">
+            {service.items.map((item, j) => (
+              <li key={j} className="text-[.82rem] text-white/55 py-2 border-b border-white/[.05] last:border-b-0 flex justify-between items-center w-full">
+                {item.label}
+                <span className="text-[.75rem] text-[var(--color-coral)] font-medium">{item.price}</span>
+              </li>
+            ))}
+          </ul>
+        </CardItem>
+      </CardBody>
+    </CardContainer>
   );
 }
 
@@ -140,10 +144,10 @@ const WEB_ICONS = [
   <svg key="d" width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>,
   <svg key="e" width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" /></svg>,
 ];
-const WEB_COLORS = ['#e8614a', '#06b6d4', '#10b981', '#f59e0b', '#8b5cf6'];
+const WEB_COLORS = ['#de6c3a', '#06b6d4', '#10b981', '#f59e0b', '#8b5cf6'];
 
 function WebServicePage({ data, svc, onClose }) {
-  const COLOR = '#e8614a';
+  const COLOR = '#de6c3a';
   const scope = data.sections[0]?.items ?? [];
   const times = data.sections[1]?.items ?? [];
   const flow = data.sections[2]?.items ?? [];
@@ -592,11 +596,13 @@ export default function Services() {
           Nos enfocamos en tres cosas y las hacemos bien.
         </p>
 
-        <div className="grid grid-cols-3 max-md:grid-cols-1 gap-6">
-          {SERVICES.map((svc, i) => (
-            <ServiceCard key={svc.key} service={svc} stagger={i + 1} onOpenDetail={openDetail} />
-          ))}
-        </div>
+        <FocusCards
+          cards={SERVICES}
+          className="grid grid-cols-3 max-md:grid-cols-1 gap-6"
+          renderCard={(service, index) => (
+            <ServiceCard key={service.key} service={service} stagger={index + 1} onOpenDetail={openDetail} />
+          )}
+        />
       </section>
 
       <ServiceModal serviceKey={modalKey} isOpen={!!modalKey} onClose={closeDetail} />

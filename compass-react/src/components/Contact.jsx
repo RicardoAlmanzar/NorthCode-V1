@@ -1,10 +1,10 @@
-// ...existing code...
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { SectionEyebrow, ServiceIcon } from './ui/Icons';
 import { FORM_ENDPOINT } from '../config/chatbot.config';
+import { GlowingEffect } from './ui/glowing-effect';
 
 const PROJECT_TYPES = [
   { icon: 'web', title: 'Diseño Web', desc: 'Sitio o app nueva' },
@@ -18,7 +18,32 @@ const STEPS = [
   { num: 3, label: 'Contacto' },
 ];
 
-const inputClass = 'wiz-input w-full px-4 py-3 border-[1.5px] rounded-lg font-sans text-[.9rem] min-h-[44px] transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] focus:border-[var(--color-coral)] focus:shadow-[0_0_0_4px_rgba(232,97,74,.12)] focus:outline-none';
+const inputBase = 'wiz-input w-full px-3 py-2 border-[1.5px] rounded-lg font-sans text-[.88rem] min-h-[40px] transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] focus:outline-none';
+const inputNormal = `${inputBase} focus:border-[var(--color-coral)] focus:shadow-[0_0_0_4px_rgba(222,108,58,.12)]`;
+const inputErrorCls = `${inputBase} border-red-500 focus:border-red-500 focus:shadow-[0_0_0_4px_rgba(239,68,68,.12)]`;
+
+const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+
+function FieldError({ id, msg }) {
+  return (
+    <p
+      id={id}
+      role={msg ? 'alert' : undefined}
+      aria-live="polite"
+      className="mt-1.5 text-[.78rem] text-red-400 flex items-center gap-1 min-h-[1.1rem] transition-opacity duration-200"
+      style={{ opacity: msg ? 1 : 0, pointerEvents: msg ? 'auto' : 'none' }}
+    >
+      {msg && (
+        <>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          {msg}
+        </>
+      )}
+    </p>
+  );
+}
 
 export default function Contact({ onToast }) {
   const [step, setStep] = useState(1);
@@ -32,28 +57,61 @@ export default function Contact({ onToast }) {
   const [email, setEmail] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const leftRef = useScrollReveal();
   const formRef = useScrollReveal();
 
-  const next = () => setStep(s => Math.min(s + 1, 3));
-  const back = () => setStep(s => Math.max(s - 1, 1));
+  const touch = (field) => setTouched(t => ({ ...t, [field]: true }));
+
+  /* ── Validate step 2 ── */
+  const validateStep2 = (vals = { details }) => {
+    const e = {};
+    if (!vals.details.trim()) e.details = 'Este campo es obligatorio para poder ayudarte mejor.';
+    return e;
+  };
+
+  /* ── Validate step 3 ── */
+  const validateStep3 = (vals = { name, email }) => {
+    const e = {};
+    if (!vals.name.trim()) e.name = 'El nombre es obligatorio.';
+    if (!vals.email.trim()) e.email = 'El email es obligatorio.';
+    else if (!isValidEmail(vals.email)) e.email = 'Ingresa un email válido (ej: tu@email.com).';
+    return e;
+  };
+
+  const next = () => {
+    if (step === 2) {
+      const e = validateStep2();
+      setTouched(t => ({ ...t, details: true }));
+      setErrors(e);
+      if (Object.keys(e).length > 0) return;
+    }
+    setErrors({});
+    setStep(s => Math.min(s + 1, 3));
+  };
+
+  const back = () => {
+    setErrors({});
+    setStep(s => Math.max(s - 1, 1));
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    const e3 = validateStep3();
+    setTouched(t => ({ ...t, name: true, email: true }));
+    setErrors(e3);
+    if (Object.keys(e3).length > 0) return;
+
     setSending(true);
     try {
       if (!FORM_ENDPOINT) {
-        // Simulación si no hay endpoint
         await new Promise(r => setTimeout(r, 800));
         console.info('[Contact Form - Simulated]', {
           type: PROJECT_TYPES[selectedType].title,
           deadline: deadline?.toLocaleDateString(),
           budget: `${currency} ${budget}`,
-          details,
-          name,
-          company,
-          email,
-          whatsapp
+          details, name, company, email, whatsapp
         });
       } else {
         const response = await fetch(FORM_ENDPOINT, {
@@ -67,24 +125,17 @@ export default function Contact({ onToast }) {
             detalles: details,
             nombre: name,
             empresa: company,
-            email: email,
-            whatsapp: whatsapp
+            email,
+            whatsapp
           })
         });
         if (!response.ok) throw new Error('Form submission failed');
       }
 
       onToast?.('Tu proyecto ha sido enviado con éxito. Te contactaremos pronto.');
-      setStep(1);
-      setSelectedType(0);
-      setDeadline(null);
-      setBudget('');
-      setCurrency('USD');
-      setDetails('');
-      setName('');
-      setCompany('');
-      setEmail('');
-      setWhatsapp('');
+      setStep(1); setSelectedType(0); setDeadline(null); setBudget(''); setCurrency('USD');
+      setDetails(''); setName(''); setCompany(''); setEmail(''); setWhatsapp('');
+      setErrors({}); setTouched({});
     } catch (err) {
       onToast?.('Hubo un error al enviar el formulario. Intenta de nuevo.');
       console.error(err);
@@ -110,68 +161,68 @@ export default function Contact({ onToast }) {
         </p>
         <address className="not-italic">
           <div className="flex items-center gap-3 text-[.88rem] text-white/60 mb-3 min-h-[44px]">
-            <div className="w-[2.2rem] h-[2.2rem] rounded-full bg-white/10 flex items-center justify-center text-[.75rem] shrink-0">✉</div>
+            <div className="w-[2.2rem] h-[2.2rem] flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2" /><path d="m2 7 10 7 10-7" />
+              </svg>
+            </div>
             <a href="mailto:contact@northcoderd.com" className="text-inherit no-underline hover:text-[var(--color-coral)] transition-colors">contact@northcoderd.com</a>
           </div>
           <div className="flex items-center gap-3 text-[.88rem] text-white/60 mb-3 min-h-[44px]">
-            <div className="w-[2.2rem] h-[2.2rem] rounded-full bg-white/10 flex items-center justify-center text-[.75rem] shrink-0">📞</div>
-            <a href="tel:+18095551234" className="text-inherit no-underline hover:text-[var(--color-coral)] transition-colors">+1 (809) 555-1234</a>
+            <div className="w-[2.2rem] h-[2.2rem] flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.08 6.08l1.09-.9a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </div>
+            <a href="tel:+18098410101" className="text-inherit no-underline hover:text-[var(--color-coral)] transition-colors">+1 (809) 841-0101</a>
           </div>
           <div className="flex items-center gap-3 text-[.88rem] text-white/60 mb-3 min-h-[44px]">
-            <div className="w-[2.2rem] h-[2.2rem] rounded-full bg-white/10 flex items-center justify-center text-[.75rem] shrink-0">📍</div>
-            <span>Santo Domingo, RD — y remoto</span>
+            <div className="w-[2.2rem] h-[2.2rem] flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <span>Santo Domingo, República Dominicana</span>
           </div>
         </address>
       </div>
 
       {/* Right column — wizard form */}
-      <div
-        ref={formRef}
-        className="reveal-right rounded-2xl wiz-card wiz-card-fixed"
-      >
-        {/* Stepper — always visible at fixed top */}
-        <nav aria-label="Pasos del formulario" className="flex items-center justify-between relative wiz-stepper-bar">
+      <div ref={formRef} className="reveal-right rounded-2xl wiz-card wiz-card-fixed relative overflow-hidden">
+        <GlowingEffect spread={120} glow={true} />
+        {/* Stepper */}
+        <nav aria-label="Pasos del formulario" className="flex items-center justify-between relative wiz-stepper-bar z-10">
           {STEPS.map((s, i) => (
             <div key={s.num} className="flex items-center flex-1 last:flex-none">
               <div className="flex flex-col items-center gap-1.5 z-10">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-[.8rem] font-bold transition-colors duration-300 ${step >= s.num
-                    ? 'wiz-step-active'
-                    : 'wiz-step-inactive'
-                    }`}
-                >
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[.8rem] font-bold transition-colors duration-300 ${step >= s.num ? 'wiz-step-active' : 'wiz-step-inactive'}`}>
                   {s.num}
                 </div>
-                <span
-                  className={`text-[.72rem] font-medium transition-colors duration-300 ${step >= s.num ? 'text-[var(--color-coral)]' : 'text-[var(--color-muted)]'
-                    }`}
-                >
+                <span className={`text-[.72rem] font-medium transition-colors duration-300 ${step >= s.num ? 'text-[var(--color-coral)]' : 'text-[var(--color-muted)]'}`}>
                   {s.label}
                 </span>
               </div>
               {i < STEPS.length - 1 && (
                 <div className="flex-1 h-[2px] mx-3 mt-[-18px] relative">
                   <div className="absolute inset-0 wiz-line-bg rounded-full" />
-                  <div
-                    className="absolute inset-y-0 left-0 wiz-line-fill rounded-full transition-all duration-500"
-                    style={{ width: step > s.num ? '100%' : '0%' }}
-                  />
+                  <div className="absolute inset-y-0 left-0 wiz-line-fill rounded-full transition-all duration-500" style={{ width: step > s.num ? '100%' : '0%' }} />
                 </div>
               )}
             </div>
           ))}
         </nav>
 
-        {/* Scrollable step body — fills remaining height, never changes outer card size */}
-        <div className="wiz-step-scroll">
-          <form onSubmit={handleSubmit} aria-label="Formulario de proyecto" className="h-full">
+        {/* Step body */}
+        <div className="wiz-step-scroll relative z-10">
+          <form onSubmit={handleSubmit} aria-label="Formulario de proyecto" className="h-full" noValidate>
+
             {/* ─── Step 1: Proyecto ─── */}
             {step === 1 && (
               <div className="wiz-step-body wizard-step">
-                <h3 className="font-heading font-black text-[1.5rem] mb-1">¿Qué necesitas?</h3>
-                <p className="text-[var(--color-muted)] text-[.88rem] mb-6">Selecciona el tipo de proyecto que tienes en mente.</p>
+                <h3 className="font-heading font-black text-[1.3rem] mb-0.5">¿Qué necesitas?</h3>
+                <p className="text-[var(--color-muted)] text-[.82rem] mb-3">Selecciona el tipo de proyecto que tienes en mente.</p>
 
-                <div className="grid grid-cols-3 max-md:grid-cols-1 gap-3 mb-8" role="radiogroup" aria-label="Tipo de proyecto">
+                <div className="grid grid-cols-3 max-md:grid-cols-1 gap-2 mb-4" role="radiogroup" aria-label="Tipo de proyecto">
                   {PROJECT_TYPES.map((pt, i) => (
                     <div
                       key={i}
@@ -186,13 +237,10 @@ export default function Contact({ onToast }) {
                         if (e.key === 'ArrowLeft') n = (i - 1 + PROJECT_TYPES.length) % PROJECT_TYPES.length;
                         if (n !== undefined) { e.preventDefault(); setSelectedType(n); }
                       }}
-                      className={`border-[1.5px] rounded-xl p-4 cursor-pointer text-center transition-all duration-300 ${selectedType === i
-                        ? 'border-[var(--color-coral)] bg-[rgba(232,97,74,.06)]'
-                        : 'border-[var(--color-border)] bg-transparent hover:border-[var(--color-coral)]/40'
-                        }`}
+                      className={`border-[1.5px] rounded-xl p-3 cursor-pointer text-center transition-all duration-300 ${selectedType === i ? 'border-[var(--color-coral)] bg-[rgba(222,108,58,.06)]' : 'border-[var(--color-border)] bg-transparent hover:border-[var(--color-coral)]/40'}`}
                     >
-                      <div className="text-[var(--color-coral)] text-lg mb-2 flex justify-center" aria-hidden="true">
-                        <ServiceIcon type={pt.icon} size={24} />
+                      <div className="text-[var(--color-coral)] mb-1.5 flex justify-center" aria-hidden="true">
+                        <ServiceIcon type={pt.icon} size={20} />
                       </div>
                       <p className="text-[.82rem] font-semibold mb-0.5">{pt.title}</p>
                       <p className="text-[.72rem] text-[var(--color-muted)]">{pt.desc}</p>
@@ -200,8 +248,8 @@ export default function Contact({ onToast }) {
                   ))}
                 </div>
 
-                <div className="mb-6">
-                  <label htmlFor="wiz-deadline" className="block text-[.82rem] font-medium mb-2">
+                <div className="mb-3">
+                  <label htmlFor="wiz-deadline" className="block text-[.8rem] font-medium mb-1">
                     ¿Tienes fecha límite? <span className="font-normal text-[var(--color-muted)]">(opcional)</span>
                   </label>
                   <DatePicker
@@ -211,7 +259,7 @@ export default function Contact({ onToast }) {
                     minDate={new Date()}
                     placeholderText="mm/dd/yyyy"
                     dateFormat="MM/dd/yyyy"
-                    className={`${inputClass} bg-[var(--color-card-bg)] border-[var(--color-border)] text-[var(--color-ink)] dark:text-white w-full`}
+                    className={`${inputNormal} bg-[var(--color-card-bg)] border-[var(--color-border)] text-[var(--color-ink)] dark:text-white w-full`}
                     calendarClassName="northcode-calendar"
                     showPopperArrow={false}
                     popperPlacement="top-start"
@@ -219,9 +267,7 @@ export default function Contact({ onToast }) {
                 </div>
 
                 <div className="flex justify-end">
-                  <button type="button" onClick={next} className="wizard-btn-next">
-                    Siguiente →
-                  </button>
+                  <button type="button" onClick={next} className="wizard-btn-next">Siguiente →</button>
                 </div>
               </div>
             )}
@@ -229,54 +275,52 @@ export default function Contact({ onToast }) {
             {/* ─── Step 2: Detalles ─── */}
             {step === 2 && (
               <div className="wiz-step-body wizard-step flex flex-col">
-                <h3 className="font-heading font-black text-[1.5rem] mb-1">Cuéntanos más</h3>
-                <p className="text-[var(--color-muted)] text-[.88rem] mb-2">Entre más detalles, más precisa será nuestra propuesta.</p>
+                <h3 className="font-heading font-black text-[1.3rem] mb-0.5">Cuéntanos más</h3>
+                <p className="text-[var(--color-muted)] text-[.82rem] mb-2">Entre más detalles, más precisa será nuestra propuesta.</p>
 
-                <div className="mb-6">
-                  <label htmlFor="wiz-budget" className="block text-[.82rem] font-semibold mb-1">
+                {/* Presupuesto — opcional */}
+                <div className="mb-3">
+                  <label htmlFor="wiz-budget" className="block text-[.8rem] font-semibold mb-1">
                     ¿Cuál es tu presupuesto aproximado? <span className="font-normal text-[var(--color-muted)]">(opcional)</span>
                   </label>
-                  <div className="flex gap-2 mb-3" role="radiogroup" aria-label="Moneda">
+                  <div className="flex gap-2 mb-2" role="radiogroup" aria-label="Moneda">
                     {['USD', 'RD$'].map(c => (
                       <button
-                        key={c}
-                        type="button"
-                        role="radio"
-                        aria-checked={currency === c}
+                        key={c} type="button" role="radio" aria-checked={currency === c}
                         onClick={() => setCurrency(c)}
-                        className={`px-4 py-2 rounded-lg text-[.8rem] font-semibold border-[1.5px] transition-all duration-200 cursor-pointer ${currency === c
-                          ? 'border-[var(--color-coral)] bg-[var(--color-coral)] text-white'
-                          : 'wiz-currency-inactive'
-                          }`}
-                      >
-                        {c}
-                      </button>
+                        className={`px-3 py-1.5 rounded-lg text-[.78rem] font-semibold border-[1.5px] transition-all duration-200 cursor-pointer ${currency === c ? 'border-[var(--color-coral)] bg-[var(--color-coral)] text-white' : 'wiz-currency-inactive'}`}
+                      >{c}</button>
                     ))}
                   </div>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 wiz-prefix text-[.85rem] font-medium pointer-events-none">{currency === 'USD' ? '$' : 'RD$'}</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 wiz-prefix text-[.85rem] font-medium pointer-events-none">{currency === 'USD' ? 'USD$' : 'RD$'}</span>
                     <input
-                      type="text"
-                      id="wiz-budget"
-                      inputMode="numeric"
-                      placeholder="Ej: 1,500"
-                      value={budget}
-                      onChange={e => setBudget(e.target.value)}
-                      className={`${inputClass} ${currency === 'USD' ? 'pl-8' : 'pl-12'}`}
+                      type="text" id="wiz-budget" inputMode="numeric" placeholder="Ej: 1,500"
+                      value={budget} onChange={e => setBudget(e.target.value)}
+                      className={`${inputNormal} ${currency === 'USD' ? 'pl-14' : 'pl-12'}`}
                     />
                   </div>
                 </div>
 
-                <div className="mb-6">
-                  <label htmlFor="wiz-details" className="block text-[.82rem] font-semibold mb-1">Cuéntanos sobre tu proyecto</label>
+                {/* Detalles — requerido */}
+                <div className="mb-3">
+                  <label htmlFor="wiz-details" className="block text-[.8rem] font-semibold mb-1">
+                    Cuéntanos sobre tu proyecto <span className="text-[var(--color-coral)]">*</span>
+                  </label>
                   <textarea
-                    id="wiz-details"
-                    rows={4}
+                    id="wiz-details" rows={3}
                     value={details}
-                    onChange={e => setDetails(e.target.value)}
+                    onChange={e => {
+                      setDetails(e.target.value);
+                      if (touched.details) setErrors(er => ({ ...er, details: e.target.value.trim() ? undefined : 'Este campo es obligatorio para poder ayudarte mejor.' }));
+                    }}
+                    onBlur={() => touch('details')}
                     placeholder="¿Qué necesitas? ¿A quién va dirigido? ¿Tienes referencias?"
-                    className={`${inputClass} min-h-[110px] resize-y`}
+                    aria-describedby={errors.details ? 'err-details' : undefined}
+                    aria-invalid={!!errors.details}
+                    className={`${touched.details && errors.details ? inputErrorCls : inputNormal} min-h-[80px] resize-y`}
                   />
+                  <FieldError id="err-details" msg={touched.details ? errors.details : null} />
                 </div>
 
                 <div className="flex justify-between items-center">
@@ -289,65 +333,74 @@ export default function Contact({ onToast }) {
             {/* ─── Step 3: Contacto ─── */}
             {step === 3 && (
               <div className="wiz-step-body wizard-step flex flex-col">
-                <h3 className="font-heading font-black text-[1.5rem] mb-1">¿Con quién hablamos?</h3>
-                <p className="text-[var(--color-muted)] text-[.88rem] mb-2">Último paso — te contactamos en menos de 24h.</p>
+                <h3 className="font-heading font-black text-[1.3rem] mb-0.5">¿Con quién hablamos?</h3>
+                <p className="text-[var(--color-muted)] text-[.82rem] mb-2">Último paso — te contactamos en menos de 24h.</p>
 
-                <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4 mb-4">
+                <div className="grid grid-cols-2 max-md:grid-cols-1 gap-3 mb-2">
+                  {/* Nombre — requerido */}
                   <div>
-                    <label htmlFor="wiz-name" className="block text-[.82rem] font-semibold mb-1">Nombre</label>
+                    <label htmlFor="wiz-name" className="block text-[.82rem] font-semibold mb-1">
+                      Nombre <span className="text-[var(--color-coral)]">*</span>
+                    </label>
                     <input
-                      type="text"
-                      id="wiz-name"
-                      required
-                      autoComplete="name"
-                      placeholder="Tu nombre"
+                      type="text" id="wiz-name" autoComplete="name" placeholder="Tu nombre"
                       value={name}
-                      onChange={e => setName(e.target.value)}
-                      className={inputClass}
+                      onChange={e => {
+                        setName(e.target.value);
+                        if (touched.name) setErrors(er => ({ ...er, name: e.target.value.trim() ? undefined : 'El nombre es obligatorio.' }));
+                      }}
+                      onBlur={() => touch('name')}
+                      aria-describedby={errors.name ? 'err-name' : undefined}
+                      aria-invalid={!!errors.name}
+                      className={touched.name && errors.name ? inputErrorCls : inputNormal}
                     />
+                    <FieldError id="err-name" msg={touched.name ? errors.name : null} />
                   </div>
+                  {/* Empresa — opcional */}
                   <div>
                     <label htmlFor="wiz-company" className="block text-[.82rem] font-semibold mb-1">
                       Empresa <span className="font-normal text-[var(--color-muted)]">(opcional)</span>
                     </label>
                     <input
-                      type="text"
-                      id="wiz-company"
-                      autoComplete="organization"
-                      placeholder="Empresa"
-                      value={company}
-                      onChange={e => setCompany(e.target.value)}
-                      className={inputClass}
+                      type="text" id="wiz-company" autoComplete="organization" placeholder="Empresa"
+                      value={company} onChange={e => setCompany(e.target.value)}
+                      className={inputNormal}
                     />
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <label htmlFor="wiz-email" className="block text-[.82rem] font-semibold mb-1">Email</label>
+                {/* Email — requerido */}
+                <div className="mb-2">
+                  <label htmlFor="wiz-email" className="block text-[.8rem] font-semibold mb-1">
+                    Email <span className="text-[var(--color-coral)]">*</span>
+                  </label>
                   <input
-                    type="email"
-                    id="wiz-email"
-                    required
-                    autoComplete="email"
-                    placeholder="tu@email.com"
+                    type="email" id="wiz-email" autoComplete="email" placeholder="tu@email.com"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className={inputClass}
+                    onChange={e => {
+                      setEmail(e.target.value);
+                      if (touched.email) {
+                        const v = e.target.value;
+                        setErrors(er => ({ ...er, email: !v.trim() ? 'El email es obligatorio.' : !isValidEmail(v) ? 'Ingresa un email válido (ej: tu@email.com).' : undefined }));
+                      }
+                    }}
+                    onBlur={() => touch('email')}
+                    aria-describedby={errors.email ? 'err-email' : undefined}
+                    aria-invalid={!!errors.email}
+                    className={touched.email && errors.email ? inputErrorCls : inputNormal}
                   />
+                  <FieldError id="err-email" msg={touched.email ? errors.email : null} />
                 </div>
 
-                <div className="mb-8">
-                  <label htmlFor="wiz-whatsapp" className="block text-[.82rem] font-semibold mb-1">
+                {/* WhatsApp — opcional */}
+                <div className="mb-3">
+                  <label htmlFor="wiz-whatsapp" className="block text-[.8rem] font-semibold mb-1">
                     WhatsApp <span className="font-normal text-[var(--color-muted)]">(opcional)</span>
                   </label>
                   <input
-                    type="tel"
-                    id="wiz-whatsapp"
-                    autoComplete="tel"
-                    placeholder="+1 (809) 555-1234"
-                    value={whatsapp}
-                    onChange={e => setWhatsapp(e.target.value)}
-                    className={inputClass}
+                    type="tel" id="wiz-whatsapp" autoComplete="tel" placeholder="+1 (809) 555-1234"
+                    value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
+                    className={inputNormal}
                   />
                 </div>
 
@@ -359,8 +412,9 @@ export default function Contact({ onToast }) {
                 </div>
               </div>
             )}
+
           </form>
-        </div>{/* end wiz-step-scroll */}
+        </div>
       </div>
     </section>
   );

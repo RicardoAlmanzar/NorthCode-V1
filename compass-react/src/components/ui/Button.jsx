@@ -13,9 +13,9 @@ const base =
 
 const variants = {
   primary:
-    `${base} btn-magnetic px-6 py-3 text-[.9rem] bg-[var(--color-coral)] text-white border-2 border-[var(--color-coral)] shadow-[0_4px_16px_rgba(232,97,74,.20)] hover:-translate-y-1 hover:shadow-[0_8px_28px_rgba(232,97,74,.35)]`,
+    `${base} btn-magnetic px-6 py-3 text-[.9rem] bg-[var(--color-coral)] text-white border-2 border-[var(--color-coral)] shadow-[0_4px_16px_rgba(222,108,58,.20)] hover:-translate-y-1 hover:shadow-[0_8px_28px_rgba(222,108,58,.35)]`,
   secondary:
-    `${base} px-6 py-3 text-[.9rem] border-2 border-[var(--color-ink)] text-[var(--color-ink)] bg-transparent hover:bg-[var(--color-ink)] hover:text-white hover:-translate-y-1`,
+    `${base} px-6 py-3 text-[.9rem] border-2 border-white/70 text-white bg-transparent hover:bg-white hover:text-[#0d1b2a] hover:border-white hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(255,255,255,.15)]`,
   ghost:
     `${base} px-0 py-0 text-[.85rem] text-[var(--color-coral)] bg-transparent border-none gap-2 hover:-translate-y-0.5`,
 };
