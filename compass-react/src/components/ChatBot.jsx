@@ -11,6 +11,7 @@ import {
   CHAT_LEAD_ERROR,
   FORM_ENDPOINT,
 } from '../config/chatbot.config';
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 /* ─── Helpers ─── */
 const waUrl = (number = WHATSAPP_NUMBER, text = WHATSAPP_DEFAULT_MESSAGE) =>
@@ -148,7 +149,7 @@ export default function ChatBot() {
         await new Promise(r => setTimeout(r, 800));
         console.info('[ChatBot Lead - Simulated]', leadForm);
       } else {
-        const response = await fetch(FORM_ENDPOINT, {
+        const response = await fetchWithTimeout(FORM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({

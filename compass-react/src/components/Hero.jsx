@@ -1,5 +1,7 @@
+import { lazy, Suspense } from 'react';
 import Button from './ui/Button';
-import HeroCore3D from './HeroCore3D';
+
+const HeroCore3D = lazy(() => import('./HeroCore3D'));
 
 export default function Hero() {
   return (
@@ -20,7 +22,9 @@ export default function Hero() {
         <span className="hero-new-word hero-new-word--solutions">SOLUTIONS</span>
       </div>
 
-      <HeroCore3D />
+      <Suspense fallback={null}>
+        <HeroCore3D />
+      </Suspense>
 
       {/* ── BOTTOM CONTENT ── */}
       <div className="hero-new-bottom animate-[fadeUp_.7s_cubic-bezier(.2,.8,.2,1)_1.4s_both]">

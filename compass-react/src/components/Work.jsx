@@ -4,7 +4,7 @@ import { useScrollRevealAll, useInView } from '../hooks/useScrollReveal';
 import { SectionEyebrow } from './ui/Icons';
 
 /* â”€â”€â”€ Image Slider â”€â”€â”€ */
-function ProjectSlider({ slides, mobile }) {
+function ProjectSlider({ slides, mobile, priority = false }) {
   const [current, setCurrent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const touchStart = useRef(null);
@@ -59,7 +59,14 @@ function ProjectSlider({ slides, mobile }) {
             <div className="slider-track" style={{ transform: `translateX(-${current * 100}%)` }}>
               {slides.map((slide, i) => (
                 <div key={i} className="slider-slide">
-                  <img src={slide.src} alt={slide.alt} loading={i === 0 ? 'eager' : 'lazy'} draggable={false} />
+                  <img
+                    src={slide.src}
+                    alt={slide.alt}
+                    loading={priority && i === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={priority && i === 0 ? 'high' : 'low'}
+                    decoding="async"
+                    draggable={false}
+                  />
                 </div>
               ))}
             </div>
@@ -101,7 +108,14 @@ function ProjectSlider({ slides, mobile }) {
           <div className="slider-track" style={{ transform: `translateX(-${current * 100}%)` }}>
             {slides.map((slide, i) => (
               <div key={i} className="slider-slide">
-                <img src={slide.src} alt={slide.alt} loading={i === 0 ? 'eager' : 'lazy'} draggable={false} />
+                <img
+                  src={slide.src}
+                  alt={slide.alt}
+                  loading={priority && i === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={priority && i === 0 ? 'high' : 'low'}
+                  decoding="async"
+                  draggable={false}
+                />
               </div>
             ))}
           </div>
@@ -140,7 +154,7 @@ function ProjectCard({ project, index }) {
         <div className="w-full lg:flex-1 flex items-center justify-center">
           {project.slides && project.slides.length > 0 ? (
             <div className="w-full max-w-[620px]">
-              <ProjectSlider slides={project.slides} mobile={project.slidesMobile} />
+              <ProjectSlider slides={project.slides} mobile={project.slidesMobile} priority={index === 0} />
             </div>
           ) : (
             <div className="w-full aspect-video max-w-[500px] rounded-xl overflow-hidden" style={{ background: project.gradientDark }} />

@@ -290,7 +290,7 @@ export default function Services() {
         Nos enfocamos en tres cosas y las hacemos bien.
       </p>
 
-      <div className="grid grid-cols-3 max-md:grid-cols-1 gap-6">
+      <div className="services-grid grid grid-cols-3 max-md:grid-cols-1 gap-6">
         {SERVICES.map((service, index) => (
           <ServiceCard key={service.key} service={service} stagger={index + 1} />
         ))}

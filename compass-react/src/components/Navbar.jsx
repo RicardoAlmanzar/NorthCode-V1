@@ -45,6 +45,34 @@ export default function Navbar() {
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
+  const handleNavClick = useCallback((event, href) => {
+    closeMobile();
+
+    if (href !== '#services' && href !== '#work') return;
+
+    const section = document.querySelector(href);
+    const target = href === '#services'
+      ? section?.querySelector('.services-grid') || section
+      : section;
+    if (!target) return;
+
+    event.preventDefault();
+
+    const rect = target.getBoundingClientRect();
+    const navOffset = (navRef.current?.offsetHeight || 72) + 24;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const preferredOffset = href === '#services'
+      ? (isMobile ? navOffset : Math.min(window.innerHeight * 0.32, 300))
+      : (isMobile ? navOffset : 0);
+    const top = window.scrollY + rect.top - preferredOffset;
+
+    window.history.pushState(null, '', href);
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: 'smooth',
+    });
+  }, [closeMobile]);
+
   return (
     <>
       <nav
@@ -66,7 +94,7 @@ export default function Navbar() {
                 <li key={l.href}>
                   <a
                     href={l.href}
-                    onClick={closeMobile}
+                    onClick={(event) => handleNavClick(event, l.href)}
                     aria-current={activeSection === l.href.slice(1) ? 'true' : undefined}
                     className={`link-slide relative no-underline text-[0.78rem] font-medium tracking-[.08em] text-white/80 transition-colors duration-300 ${activeSection === l.href.slice(1) ? 'text-white' : 'hover:text-[var(--color-coral)]'}`}
                   >
@@ -108,7 +136,7 @@ export default function Navbar() {
               <li key={l.href}>
                 <a
                   href={l.href}
-                  onClick={closeMobile}
+                  onClick={(event) => handleNavClick(event, l.href)}
                   aria-current={activeSection === l.href.slice(1) ? 'true' : undefined}
                   className={`block no-underline text-[0.88rem] font-semibold tracking-[.06em] text-white/85 transition-colors duration-300 ${activeSection === l.href.slice(1) ? 'text-white' : 'hover:text-[var(--color-coral)]'}`}
                 >

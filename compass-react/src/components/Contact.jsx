@@ -6,6 +6,7 @@ import { SectionEyebrow, ServiceIcon } from "./ui/Icons";
 import RotatingText from "./ui/RotatingText";
 import { FORM_ENDPOINT } from '../config/chatbot.config';
 import { GlowingEffect } from './ui/glowing-effect';
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 const PROJECT_TYPES = [
   { icon: 'web', title: 'Diseño Web', desc: 'Sitio o app nueva' },
@@ -73,7 +74,7 @@ export default function Contact({ onToast }) {
   const validateStep1 = (vals = { deadline, deadlineFlexible }) => {
     const e = {};
     if (!vals.deadlineFlexible && isBeforeToday(vals.deadline)) {
-      e.deadline = 'La fecha lÃ­mite no puede ser anterior a hoy.';
+      e.deadline = 'La fecha límite no puede ser anterior a hoy.';
     }
     return e;
   };
@@ -150,7 +151,7 @@ export default function Contact({ onToast }) {
           details, name, company, email, whatsapp
         });
       } else {
-        const response = await fetch(FORM_ENDPOINT, {
+        const response = await fetchWithTimeout(FORM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
@@ -336,7 +337,7 @@ export default function Contact({ onToast }) {
                           if (touched.deadline) {
                             setErrors(er => ({
                               ...er,
-                              deadline: isBeforeToday(date) ? 'La fecha lÃ­mite no puede ser anterior a hoy.' : undefined
+                              deadline: isBeforeToday(date) ? 'La fecha límite no puede ser anterior a hoy.' : undefined
                             }));
                           }
                         }}
