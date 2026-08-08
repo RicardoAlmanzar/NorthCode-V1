@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { SectionEyebrow, ServiceIcon } from './ui/Icons';
+import { SectionEyebrow, ServiceIcon } from "./ui/Icons";
+import RotatingText from "./ui/RotatingText";
 import { FORM_ENDPOINT } from '../config/chatbot.config';
 import { GlowingEffect } from './ui/glowing-effect';
 
@@ -23,6 +24,9 @@ const inputNormal = `${inputBase} focus:border-[var(--color-coral)] focus:shadow
 const inputErrorCls = `${inputBase} border-red-500 focus:border-red-500 focus:shadow-[0_0_0_4px_rgba(239,68,68,.12)]`;
 
 const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+const startOfDay = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const todayStart = () => startOfDay(new Date());
+const isBeforeToday = (date) => date && startOfDay(date).getTime() < todayStart().getTime();
 
 function FieldError({ id, msg }) {
   return (
@@ -49,6 +53,7 @@ export default function Contact({ onToast }) {
   const [step, setStep] = useState(1);
   const [selectedType, setSelectedType] = useState(0);
   const [deadline, setDeadline] = useState(null);
+  const [deadlineFlexible, setDeadlineFlexible] = useState(false);
   const [budget, setBudget] = useState('');
   const [currency, setCurrency] = useState('USD');
   const [details, setDetails] = useState('');
@@ -59,10 +64,19 @@ export default function Contact({ onToast }) {
   const [sending, setSending] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+  const projectOptionRefs = useRef([]);
   const leftRef = useScrollReveal();
   const formRef = useScrollReveal();
 
   const touch = (field) => setTouched(t => ({ ...t, [field]: true }));
+
+  const validateStep1 = (vals = { deadline, deadlineFlexible }) => {
+    const e = {};
+    if (!vals.deadlineFlexible && isBeforeToday(vals.deadline)) {
+      e.deadline = 'La fecha lÃ­mite no puede ser anterior a hoy.';
+    }
+    return e;
+  };
 
   /* ── Validate step 2 ── */
   const validateStep2 = (vals = { details }) => {
@@ -81,6 +95,12 @@ export default function Contact({ onToast }) {
   };
 
   const next = () => {
+    if (step === 1) {
+      const e = validateStep1();
+      setTouched(t => ({ ...t, deadline: true }));
+      setErrors(e);
+      if (Object.keys(e).length > 0) return;
+    }
     if (step === 2) {
       const e = validateStep2();
       setTouched(t => ({ ...t, details: true }));
@@ -98,6 +118,22 @@ export default function Contact({ onToast }) {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    const e1 = validateStep1();
+    if (Object.keys(e1).length > 0) {
+      setTouched(t => ({ ...t, deadline: true }));
+      setErrors(e1);
+      setStep(1);
+      return;
+    }
+
+    const e2 = validateStep2();
+    if (Object.keys(e2).length > 0) {
+      setTouched(t => ({ ...t, details: true }));
+      setErrors(e2);
+      setStep(2);
+      return;
+    }
+
     const e3 = validateStep3();
     setTouched(t => ({ ...t, name: true, email: true }));
     setErrors(e3);
@@ -109,7 +145,7 @@ export default function Contact({ onToast }) {
         await new Promise(r => setTimeout(r, 800));
         console.info('[Contact Form - Simulated]', {
           type: PROJECT_TYPES[selectedType].title,
-          deadline: deadline?.toLocaleDateString(),
+          deadline: deadlineFlexible ? 'Sin fecha definida' : deadline?.toLocaleDateString(),
           budget: `${currency} ${budget}`,
           details, name, company, email, whatsapp
         });
@@ -120,7 +156,7 @@ export default function Contact({ onToast }) {
           body: JSON.stringify({
             _subject: `Nuevo Proyecto de ${name}`,
             tipo_proyecto: PROJECT_TYPES[selectedType].title,
-            fecha_limite: deadline?.toLocaleDateString(),
+            fecha_limite: deadlineFlexible ? 'Sin fecha definida' : deadline?.toLocaleDateString(),
             presupuesto: `${currency} ${budget}`,
             detalles: details,
             nombre: name,
@@ -133,7 +169,7 @@ export default function Contact({ onToast }) {
       }
 
       onToast?.('Tu proyecto ha sido enviado con éxito. Te contactaremos pronto.');
-      setStep(1); setSelectedType(0); setDeadline(null); setBudget(''); setCurrency('USD');
+      setStep(1); setSelectedType(0); setDeadline(null); setDeadlineFlexible(false); setBudget(''); setCurrency('USD');
       setDetails(''); setName(''); setCompany(''); setEmail(''); setWhatsapp('');
       setErrors({}); setTouched({});
     } catch (err) {
@@ -154,10 +190,18 @@ export default function Contact({ onToast }) {
       <div ref={leftRef} className="reveal-left">
         <SectionEyebrow className="text-[var(--color-coral-lt)] before:bg-[var(--color-coral-lt)]">Contacto</SectionEyebrow>
         <h2 id="contact-heading" className="font-heading font-black leading-[1.15] text-[clamp(1.8rem,3vw,2.8rem)] mb-4 text-white">
-          ¿Tienes un <em className="italic text-[var(--color-coral)]">proyecto</em> en mente?
+          <span className="inline-flex flex-wrap items-center gap-3">
+            <span>¿Tienes un</span>
+            <RotatingText
+              words={["proyecto", "idea", "diseño"]}
+              className="italic font-black text-white bg-[var(--color-coral)] px-4 py-1.5 rounded-[1.5rem] shadow-[0_18px_40px_rgba(222,108,58,0.18)]"
+            />
+          </span>
+          <br />
+          <span className="block">en mente?</span>
         </h2>
         <p className="text-white/55 max-w-[56ch] leading-[1.75] mb-12 text-base">
-          Escríbenos y te respondemos en menos de 24 horas. Sin formalidades.
+          Escríbenos y te respondemos en menos de 24 horas.
         </p>
         <address className="not-italic">
           <div className="flex items-center gap-3 text-[.88rem] text-white/60 mb-3 min-h-[44px]">
@@ -182,7 +226,14 @@ export default function Contact({ onToast }) {
                 <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
               </svg>
             </div>
-            <span>Santo Domingo, República Dominicana</span>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Santo%20Domingo%2C%20Rep%C3%BAblica%20Dominicana"
+              target="_blank"
+              rel="noreferrer"
+              className="text-inherit no-underline hover:text-[var(--color-coral)] transition-colors"
+            >
+              Santo Domingo, República Dominicana
+            </a>
           </div>
         </address>
       </div>
@@ -192,24 +243,31 @@ export default function Contact({ onToast }) {
         <GlowingEffect spread={120} glow={true} />
         {/* Stepper */}
         <nav aria-label="Pasos del formulario" className="flex items-center justify-between relative wiz-stepper-bar z-10">
-          {STEPS.map((s, i) => (
-            <div key={s.num} className="flex items-center flex-1 last:flex-none">
-              <div className="flex flex-col items-center gap-1.5 z-10">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[.8rem] font-bold transition-colors duration-300 ${step >= s.num ? 'wiz-step-active' : 'wiz-step-inactive'}`}>
-                  {s.num}
+          {STEPS.map((s, i) => {
+            const state = step > s.num ? 'complete' : step === s.num ? 'current' : 'pending';
+            return (
+              <div key={s.num} className="flex items-center flex-1 last:flex-none">
+                <div className={`wiz-stepper-item wiz-stepper-item--${state}`} aria-current={state === 'current' ? 'step' : undefined}>
+                  <div className="wiz-stepper-dot">
+                    {state === 'complete' ? (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="m5 12 4 4L19 6" />
+                      </svg>
+                    ) : (
+                      s.num
+                    )}
+                  </div>
+                  <span className="wiz-stepper-label">{s.label}</span>
                 </div>
-                <span className={`text-[.72rem] font-medium transition-colors duration-300 ${step >= s.num ? 'text-[var(--color-coral)]' : 'text-[var(--color-muted)]'}`}>
-                  {s.label}
-                </span>
+                {i < STEPS.length - 1 && (
+                  <div className="wiz-stepper-line">
+                    <div className="wiz-line-bg" />
+                    <div className="wiz-line-fill" style={{ width: step > s.num ? '100%' : step === s.num ? '38%' : '0%' }} />
+                  </div>
+                )}
               </div>
-              {i < STEPS.length - 1 && (
-                <div className="flex-1 h-[2px] mx-3 mt-[-18px] relative">
-                  <div className="absolute inset-0 wiz-line-bg rounded-full" />
-                  <div className="absolute inset-y-0 left-0 wiz-line-fill rounded-full transition-all duration-500" style={{ width: step > s.num ? '100%' : '0%' }} />
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </nav>
 
         {/* Step body */}
@@ -224,8 +282,10 @@ export default function Contact({ onToast }) {
 
                 <div className="grid grid-cols-3 max-md:grid-cols-1 gap-2 mb-4" role="radiogroup" aria-label="Tipo de proyecto">
                   {PROJECT_TYPES.map((pt, i) => (
-                    <div
+                    <button
                       key={i}
+                      ref={(node) => { projectOptionRefs.current[i] = node; }}
+                      type="button"
                       role="radio"
                       aria-checked={selectedType === i}
                       tabIndex={selectedType === i ? 0 : -1}
@@ -235,16 +295,25 @@ export default function Contact({ onToast }) {
                         let n;
                         if (e.key === 'ArrowRight') n = (i + 1) % PROJECT_TYPES.length;
                         if (e.key === 'ArrowLeft') n = (i - 1 + PROJECT_TYPES.length) % PROJECT_TYPES.length;
-                        if (n !== undefined) { e.preventDefault(); setSelectedType(n); }
+                        if (n !== undefined) {
+                          e.preventDefault();
+                          setSelectedType(n);
+                          projectOptionRefs.current[n]?.focus();
+                        }
                       }}
-                      className={`border-[1.5px] rounded-xl p-3 cursor-pointer text-center transition-all duration-300 ${selectedType === i ? 'border-[var(--color-coral)] bg-[rgba(222,108,58,.06)]' : 'border-[var(--color-border)] bg-transparent hover:border-[var(--color-coral)]/40'}`}
+                      className={`wiz-project-option ${selectedType === i ? 'is-selected' : ''}`}
                     >
-                      <div className="text-[var(--color-coral)] mb-1.5 flex justify-center" aria-hidden="true">
-                        <ServiceIcon type={pt.icon} size={20} />
+                      <span className="wiz-project-check" aria-hidden="true">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="m5 12 4 4L19 6" />
+                        </svg>
+                      </span>
+                      <div className="wiz-project-icon" aria-hidden="true">
+                        <ServiceIcon type={pt.icon} size={22} />
                       </div>
                       <p className="text-[.82rem] font-semibold mb-0.5">{pt.title}</p>
                       <p className="text-[.72rem] text-[var(--color-muted)]">{pt.desc}</p>
-                    </div>
+                    </button>
                   ))}
                 </div>
 
@@ -252,18 +321,51 @@ export default function Contact({ onToast }) {
                   <label htmlFor="wiz-deadline" className="block text-[.8rem] font-medium mb-1">
                     ¿Tienes fecha límite? <span className="font-normal text-[var(--color-muted)]">(opcional)</span>
                   </label>
-                  <DatePicker
-                    id="wiz-deadline"
-                    selected={deadline}
-                    onChange={(date) => setDeadline(date)}
-                    minDate={new Date()}
-                    placeholderText="mm/dd/yyyy"
-                    dateFormat="MM/dd/yyyy"
-                    className={`${inputNormal} bg-[var(--color-card-bg)] border-[var(--color-border)] text-[var(--color-ink)] dark:text-white w-full`}
-                    calendarClassName="northcode-calendar"
-                    showPopperArrow={false}
-                    popperPlacement="top-start"
-                  />
+                  <div className="wiz-date-row">
+                    <div className="wiz-date-field">
+                      <svg className="wiz-date-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="18" rx="3" />
+                        <path d="M16 2v4M8 2v4M3 10h18" />
+                      </svg>
+                      <DatePicker
+                        id="wiz-deadline"
+                        selected={deadline}
+                        onChange={(date) => {
+                          setDeadline(date);
+                          setDeadlineFlexible(false);
+                          if (touched.deadline) {
+                            setErrors(er => ({
+                              ...er,
+                              deadline: isBeforeToday(date) ? 'La fecha lÃ­mite no puede ser anterior a hoy.' : undefined
+                            }));
+                          }
+                        }}
+                        onBlur={() => touch('deadline')}
+                        minDate={todayStart()}
+                        placeholderText="Selecciona una fecha aproximada"
+                        dateFormat="MM/dd/yyyy"
+                        aria-describedby={errors.deadline ? 'err-deadline' : undefined}
+                        aria-invalid={!!errors.deadline}
+                        className={`${touched.deadline && errors.deadline ? inputErrorCls : inputNormal} wiz-date-input`}
+                        calendarClassName="northcode-calendar"
+                        showPopperArrow={false}
+                        popperPlacement="top-start"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className={`wiz-date-flexible ${deadlineFlexible ? 'is-selected' : ''}`}
+                      aria-pressed={deadlineFlexible}
+                      onClick={() => {
+                        setDeadline(null);
+                        setDeadlineFlexible(true);
+                        setErrors(er => ({ ...er, deadline: undefined }));
+                      }}
+                    >
+                      No tengo fecha definida
+                    </button>
+                  </div>
+                  <FieldError id="err-deadline" msg={touched.deadline ? errors.deadline : null} />
                 </div>
 
                 <div className="flex justify-end">
@@ -288,7 +390,7 @@ export default function Contact({ onToast }) {
                       <button
                         key={c} type="button" role="radio" aria-checked={currency === c}
                         onClick={() => setCurrency(c)}
-                        className={`px-3 py-1.5 rounded-lg text-[.78rem] font-semibold border-[1.5px] transition-all duration-200 cursor-pointer ${currency === c ? 'border-[var(--color-coral)] bg-[var(--color-coral)] text-white' : 'wiz-currency-inactive'}`}
+                        className={`wiz-currency-option ${currency === c ? 'is-selected' : ''}`}
                       >{c}</button>
                     ))}
                   </div>

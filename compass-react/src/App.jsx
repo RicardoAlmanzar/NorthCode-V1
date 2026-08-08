@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import TextLoop from './components/ui/TextLoop';
 import Work from './components/Work';
 import Services from './components/Services';
 import About from './components/About';
@@ -25,6 +26,12 @@ export default function App() {
       <main id="main">
         <Hero />
         <Work />
+        <section className="text-loop-section" aria-label="Especialidades">
+          <TextLoop 
+            text="DESIGN THINKING ✦ SOFTWARE ENGINEERING ✦ WEB DEVELOPMENT ✦ "
+            speed={1.2}
+          />
+        </section>
         <Services />
         <About />
         <FAQ />
