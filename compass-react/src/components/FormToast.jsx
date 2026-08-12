@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 export default function FormToast({ message, onDone }) {
   const [show, setShow] = useState(false);
+  const isError = message?.toLowerCase().includes('error');
 
   useEffect(() => {
     if (message) {
@@ -20,15 +21,23 @@ export default function FormToast({ message, onDone }) {
     <div
       role="status"
       aria-live="polite"
-      className={`fixed bottom-12 left-1/2 -translate-x-1/2 z-[300] bg-[var(--color-success)] text-white px-6 py-3.5 rounded-2xl text-[.9rem] font-semibold shadow-[0_20px_50px_rgba(16,185,129,.3)] border border-white/20 flex items-center gap-3 pointer-events-none transition-[opacity,visibility,transform] duration-500 ease-[cubic-bezier(.2,.8,.2,1)] ${show ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-8'
-        }`}
+      className={`form-toast ${show ? 'is-visible' : ''} ${isError ? 'is-error' : 'is-success'}`}
     >
-      <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-3 h-3">
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
+      <div className="form-toast-icon" aria-hidden="true">
+        {isError ? (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v6" />
+            <path d="M12 17h.01" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        )}
       </div>
-      <span>{message}</span>
+      <span className="form-toast-message">{message}</span>
+      <span className="form-toast-progress" aria-hidden="true" />
     </div>
   );
 }

@@ -5,36 +5,69 @@ export const SERVICES = [
     name: 'Web',
     url: 'northcode.dev/services/web',
     icon: 'globe',
+    summary: 'Sitios y experiencias digitales con enfoque en claridad, velocidad y resultados.',
+    description: 'Diseñamos productos web claros y de alto rendimiento para que tu marca se vea profesional y convierta con naturalidad.',
     items: [
       { label: 'Sitios corporativos', price: 'Desde $800' },
       { label: 'E-Commerce', price: 'Desde $1,200' },
       { label: 'Landing pages', price: 'Desde $400' },
       { label: 'Mantenimiento', price: 'Desde $80/mes' },
     ],
+    backSide: {
+      title: 'Tu presencia digital empieza aquí.',
+      description: 'Diseñamos y desarrollamos sitios rápidos, modernos y preparados para convertir visitantes en clientes.',
+      benefits: [
+        'Experiencia rápida y responsive',
+        'Optimizado para SEO',
+        'Escalable para crecer',
+      ],
+    },
   },
   {
     key: 'branding',
     name: 'UI/Branding',
     url: 'northcode.dev/services/branding',
     icon: 'star',
+    summary: 'Identidades visuales y sistemas de diseño que transmiten confianza y personalidad.',
+    description: 'Creamos marcas y experiencias visuales coherentes, elegantes y escalables para que cada interacción se sienta cuidada.',
     items: [
       { label: 'Identidad visual', price: 'Desde $600' },
       { label: 'UI/UX para apps', price: 'Desde $900' },
       { label: 'Materiales de marca', price: 'Desde $300' },
       { label: 'Guía de marca', price: 'Desde $200' },
     ],
+    backSide: {
+      title: 'Una marca que se recuerda.',
+      description: 'Creamos identidades visuales y experiencias digitales que transmiten confianza desde el primer vistazo.',
+      benefits: [
+        'Diseño centrado en el usuario',
+        'Identidad visual consistente',
+        'Interfaces modernas',
+      ],
+    },
   },
   {
     key: 'desktop',
     name: 'Aplicaciones de escritorio',
     url: 'northcode.dev/services/desktop',
     icon: 'desktop',
+    summary: 'Aplicaciones de escritorio pensadas para operaciones, control y productividad.',
+    description: 'Desarrollamos herramientas internas y soluciones productivas con una experiencia fluida, estable y preparada para crecer.',
     items: [
       { label: 'Apps empresariales', price: 'Desde $2,500' },
       { label: 'Herramientas internas', price: 'Desde $1,800' },
       { label: 'Dashboard & analytics', price: 'Desde $1,500' },
       { label: 'Soporte & updates', price: 'Desde $150/mes' },
     ],
+    backSide: {
+      title: 'Software hecho para tu negocio.',
+      description: 'Automatizamos procesos con aplicaciones robustas, intuitivas y adaptadas a tu forma de trabajar.',
+      benefits: [
+        'Mayor productividad',
+        'Procesos automatizados',
+        'Soluciones a medida',
+      ],
+    },
   },
 ];
 
@@ -186,6 +219,7 @@ export const PROJECTS = [
     gradient: 'linear-gradient(135deg,#b5c8d8,#ccd8e8)',
     gradientDark: 'linear-gradient(135deg,#1e3448,#253d52)',
     thumb: '/img/projects/natura/thumbnail-sistema-HQ.jpg',
+    technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Express.js', 'MySQL'],
     slides: [
       { src: '/img/projects/natura/LogIn.png', alt: 'Inicio de sesión — Natura Co.' },
       { src: '/img/projects/natura/dashboard.png', alt: 'Dashboard estadístico — Panel del Analista' },
@@ -208,6 +242,7 @@ export const PROJECTS = [
     gradient: 'linear-gradient(135deg,#e8a090,#f2b5a5)',
     gradientDark: 'linear-gradient(135deg,#4a2a22,#5c382e)',
     thumb: '/img/projects/fintech/thumbnail-auxilio-v5-HQ.jpg',
+    technologies: ['React Native', 'JavaScript', 'Firebase', 'Google Maps API', 'Figma'],
     slides: [
       { src: '/img/projects/fintech/login.png', alt: 'Login — App móvil' },
       { src: '/img/projects/fintech/inicio.png', alt: 'Pantalla de inicio' },
@@ -230,6 +265,7 @@ export const PROJECTS = [
     gradient: 'linear-gradient(135deg,#8fb2c8,#a8c5d5)',
     gradientDark: 'linear-gradient(135deg,#1a3040,#24404e)',
     thumb: '/img/projects/gestion/thumbnail-dgcd-HQ.jpg',
+    technologies: ['Vue.js', 'TypeScript', 'Tailwind CSS', 'Laravel', 'PostgreSQL'],
     slides: [
       { src: '/img/projects/gestion/first.png', alt: 'Vista principal — Herramienta de Gestión' },
       { src: '/img/projects/gestion/second.png', alt: 'Panel de control' },
@@ -255,6 +291,7 @@ export const PROJECTS = [
     gradient: 'linear-gradient(135deg,#e89080,#f2a895)',
     gradientDark: 'linear-gradient(135deg,#4a2820,#5c3528)',
     thumb: '/img/projects/sneakers/thumbnail-waldykicks-HQ.jpg',
+    technologies: ['Next.js', 'TypeScript', 'Stripe API', 'Vercel', 'MongoDB'],
     slides: [
       { src: '/img/projects/sneakers/inicio.jpg', alt: 'Vista de Inicio — Waldykicks' },
       { src: '/img/projects/sneakers/verify.jpg', alt: 'Verificación de autenticidad' },

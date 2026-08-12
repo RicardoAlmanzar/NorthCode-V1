@@ -7,7 +7,6 @@ const NAV_LINKS = [
   { href: '#work', label: 'Portafolio' },
   { href: '#services', label: 'Servicios' },
   { href: '#about', label: 'Nosotros' },
-  { href: '#contact', label: 'Contacto' },
 ];
 
 export default function Navbar() {
@@ -46,79 +45,108 @@ export default function Navbar() {
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
+  const handleNavClick = useCallback((event, href) => {
+    closeMobile();
+
+    if (href !== '#services' && href !== '#work') return;
+
+    const section = document.querySelector(href);
+    const target = href === '#services'
+      ? section?.querySelector('.services-grid') || section
+      : section;
+    if (!target) return;
+
+    event.preventDefault();
+
+    const rect = target.getBoundingClientRect();
+    const navOffset = (navRef.current?.offsetHeight || 72) + 24;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const preferredOffset = href === '#services'
+      ? (isMobile ? navOffset : Math.min(window.innerHeight * 0.32, 300))
+      : (isMobile ? navOffset : 0);
+    const top = window.scrollY + rect.top - preferredOffset;
+
+    window.history.pushState(null, '', href);
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: 'smooth',
+    });
+  }, [closeMobile]);
+
   return (
     <>
-      <div className="h-[72px] max-md:h-[60px]" aria-hidden="true" />
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-16 py-4 max-md:px-6 max-md:flex-wrap border-b border-transparent transition-[background-color,border-color,box-shadow,color] duration-350 ease-[cubic-bezier(.2,.8,.2,1)] ${scrolled || mobileOpen ? 'nav-scrolled border-[var(--color-border)] text-[var(--color-ink)]' : 'bg-transparent'
-          }`}
+        className={`fixed top-4 left-1/2 z-[100] -translate-x-1/2 w-[min(56vw,620px)] max-w-[620px] px-3 py-2 md:px-4 md:py-3 border border-white/10 rounded-full bg-slate-950/45 shadow-[0_18px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl transition duration-300 ${scrolled ? 'bg-slate-950/65 shadow-[0_18px_70px_rgba(0,0,0,0.24)] border-white/15' : 'bg-slate-950/45'}`}
         aria-label="Navegación principal"
       >
-        <a href="#hero" className="no-underline transition-opacity duration-300 hover:opacity-80" aria-label="NorthCode — Inicio">
-          <NorthCodeLogo size={34} color={scrolled || mobileOpen ? "var(--color-ink)" : (dark ? "#e8ecf0" : "#0d1b2a")} />
-        </a>
+        <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-4">
+          <div className="flex items-center gap-2.5">
+            <a href="#hero" className="no-underline transition-opacity duration-300 hover:opacity-80 flex items-center gap-2.5" aria-label="NorthCode — Inicio">
+              <img src="/favicon.png" alt="NorthCode Logo" width={48} height={48} className="h-11 w-11 object-contain" />
+              <span className="text-[0.88rem] font-semibold text-white">NorthCode</span>
+            </a>
+          </div>
 
-        {/* Hamburger */}
-        <button
-          className="hidden max-md:flex w-11 h-11 border-none bg-none cursor-pointer p-0 flex-col items-center justify-center gap-[5px] order-3"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={mobileOpen}
-        >
-          <span className={`block w-[22px] h-[2px] bg-[var(--color-ink)] rounded-sm transition-[transform,opacity] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] ${mobileOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
-          <span className={`block w-[22px] h-[2px] bg-[var(--color-ink)] rounded-sm transition-[opacity,transform] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] ${mobileOpen ? 'opacity-0 scale-x-0' : ''}`} />
-          <span className={`block w-[22px] h-[2px] bg-[var(--color-ink)] rounded-sm transition-[transform,opacity] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] ${mobileOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
-        </button>
+          <div className="hidden md:flex justify-center">
+            <ul className="list-none flex items-center gap-6">
+              {NAV_LINKS.map(l => (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    onClick={(event) => handleNavClick(event, l.href)}
+                    aria-current={activeSection === l.href.slice(1) ? 'true' : undefined}
+                    className={`link-slide relative no-underline text-[0.78rem] font-medium tracking-[.08em] text-white/80 transition-colors duration-300 ${activeSection === l.href.slice(1) ? 'text-white' : 'hover:text-[var(--color-coral)]'}`}
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* Links */}
-        <ul
-          className={`list-none flex gap-8 max-md:flex-col max-md:w-full max-md:order-5 max-md:gap-0 max-md:overflow-hidden max-md:transition-[max-height,padding,opacity] max-md:duration-400 max-md:ease-[cubic-bezier(.2,.8,.2,1)] ${mobileOpen ? 'max-md:max-h-[500px] max-md:py-8 max-md:opacity-100' : 'max-md:max-h-0 max-md:py-0 max-md:opacity-0'}`}
-        >
-          {/* Mobile-only header inside menu for context */}
-          <li className="hidden max-md:block mb-6">
-            <p className="text-[.7rem] tracking-[.15em] uppercase text-[var(--color-coral)] font-bold opacity-70">
-              Diseño & Desarrollo Web
-            </p>
-          </li>
-
-          {NAV_LINKS.map(l => (
-            <li key={l.href} className="max-md:w-full">
-              <a
-                href={l.href}
+          <div className="flex items-center justify-end gap-2.5">
+            <div className="hidden md:block">
+              <Button
+                href="#contact"
                 onClick={closeMobile}
-                aria-current={activeSection === l.href.slice(1) ? 'true' : undefined}
-                className={`link-slide relative no-underline text-[.82rem] font-medium tracking-[.06em] uppercase py-2 min-h-[44px] inline-flex items-center transition-colors duration-300 max-md:w-full max-md:py-3 max-md:text-[.9rem] max-md:border-b max-md:border-[var(--color-border)] ${activeSection === l.href.slice(1) ? 'text-[var(--color-coral)]' : 'text-[var(--color-ink)] hover:text-[var(--color-coral)]'
-                  }`}
+                className="whitespace-nowrap !text-[0.72rem] !px-4 !py-2.5 font-semibold tracking-[.04em] capitalize bg-[var(--color-coral)] text-white shadow-[0_10px_30px_rgba(222,108,58,0.18)] backdrop-blur-sm border border-[rgba(222,108,58,0.2)] hover:bg-[#f0753d]"
+                aria-label="Contacto"
               >
-                {l.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+                Contacto
+              </Button>
+            </div>
 
-        {/* Theme toggle */}
-        <button
-          onClick={toggle}
-          className="relative w-11 h-11 border-none bg-none cursor-pointer flex items-center justify-center rounded-full transition-shadow duration-300 hover:shadow-[0_0_12px_rgba(26,58,92,.25)] active:scale-[.93]"
-          aria-label={dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-          aria-pressed={dark}
-        >
-          <CompassSvg />
-        </button>
+            <button
+              className="md:hidden flex w-9 h-9 border-none bg-white/10 text-white rounded-full cursor-pointer p-0 flex-col items-center justify-center gap-[3px] transition hover:bg-white/15"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={mobileOpen}
+            >
+              <span className={`block w-[18px] h-[2px] bg-white rounded-sm transition-transform duration-300 ${mobileOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
+              <span className={`block w-[18px] h-[2px] bg-white rounded-sm transition-opacity duration-300 ${mobileOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`} />
+              <span className={`block w-[18px] h-[2px] bg-white rounded-sm transition-transform duration-300 ${mobileOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
+            </button>
+          </div>
+        </div>
 
-        <Button
-          href="#contact"
-          onClick={closeMobile}
-          className="text-[.82rem] font-semibold tracking-[.04em] uppercase max-md:order-4 max-md:w-full max-md:mt-4 max-md:hidden"
-          aria-label="Solicitar cotización de proyecto"
-        >
-          Cotizar proyecto
-        </Button>
-        {/* Mobile-only button at bottom of list */}
-        <div className={`hidden max-md:block w-full order-6 transition-all duration-400 delay-100 ${mobileOpen ? 'opacity-100 translate-y-0 mt-8' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-          <Button href="#contact" onClick={closeMobile} className="w-full" aria-label="Solicitar cotización de proyecto">
-            Cotizar proyecto
+        <div className={`md:hidden absolute left-1/2 top-full z-[50] mt-2 w-[min(84vw,300px)] -translate-x-1/2 rounded-[28px] border border-white/20 bg-white/10 backdrop-blur-xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.25)] transition duration-300 ${mobileOpen ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'}`}>
+          <ul className="list-none flex flex-col gap-3">
+            {NAV_LINKS.map(l => (
+              <li key={l.href}>
+                <a
+                  href={l.href}
+                  onClick={(event) => handleNavClick(event, l.href)}
+                  aria-current={activeSection === l.href.slice(1) ? 'true' : undefined}
+                  className={`block no-underline text-[0.88rem] font-semibold tracking-[.06em] text-white/85 transition-colors duration-300 ${activeSection === l.href.slice(1) ? 'text-white' : 'hover:text-[var(--color-coral)]'}`}
+                >
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <Button href="#contact" onClick={closeMobile} className="mt-3 w-full justify-center whitespace-nowrap !text-[0.78rem] !py-2.5" aria-label="Solicitar cotización de proyecto">
+            Solicitar cotización
           </Button>
         </div>
       </nav>

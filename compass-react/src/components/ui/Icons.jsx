@@ -137,14 +137,14 @@ export function NorthCodeLogo({ size = 36, className = '' }) {
         <path d="M69.8,38 A30,30 0 0,1 38,69.8" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
 
         {/* Coral arc: top-right quarter (12 o'clock to 3 o'clock) */}
-        <path d="M38,8.2 A30,30 0 0,1 69.8,38" stroke="#e8614a" strokeWidth="4" strokeLinecap="round" fill="none" />
+        <path d="M38,8.2 A30,30 0 0,1 69.8,38" stroke="#de6c3a" strokeWidth="4" strokeLinecap="round" fill="none" />
 
         {/* Small coral accent line — bottom-left inside */}
-        <path d="M13,52 A26,26 0 0,1 11,44" stroke="#e8614a" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity=".8" />
+        <path d="M13,52 A26,26 0 0,1 11,44" stroke="#de6c3a" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity=".8" />
 
         {/* Junction dots at cardinal points */}
         <circle cx="38" cy="8" r="3.2" fill="#1a3a5c" />
-        <circle cx="69.8" cy="38" r="3.2" fill="#e8614a" />
+        <circle cx="69.8" cy="38" r="3.2" fill="#de6c3a" />
         <circle cx="8" cy="38" r="3.2" fill="#1a3a5c" />
         <circle cx="38" cy="70" r="3.2" fill="#1a3a5c" />
 
@@ -163,7 +163,7 @@ export function NorthCodeLogo({ size = 36, className = '' }) {
         {/* Gradient for needle */}
         <defs>
           <linearGradient id="nc-needle-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#e8614a" />
+            <stop offset="0%" stopColor="#de6c3a" />
             <stop offset="100%" stopColor="#d4553f" />
           </linearGradient>
         </defs>
@@ -174,7 +174,7 @@ export function NorthCodeLogo({ size = 36, className = '' }) {
         NORTH
       </text>
       {/* Text — CODE */}
-      <text x="92" y="66" fontFamily="var(--ff-heading), 'Geist', sans-serif" fontSize="27" fontWeight="800" letterSpacing="2.5" fill="#e8614a">
+      <text x="92" y="66" fontFamily="var(--ff-heading), 'Geist', sans-serif" fontSize="27" fontWeight="800" letterSpacing="2.5" fill="#de6c3a">
         CODE
       </text>
     </svg>
@@ -198,12 +198,12 @@ export function NorthCodeIcon({ size = 32, className = '' }) {
         <path d="M38,69.8 A30,30 0 0,1 8.2,38" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
         <path d="M69.8,38 A30,30 0 0,1 38,69.8" stroke="#1a3a5c" strokeWidth="4" strokeLinecap="round" fill="none" />
         {/* Coral arc */}
-        <path d="M38,8.2 A30,30 0 0,1 69.8,38" stroke="#e8614a" strokeWidth="4" strokeLinecap="round" fill="none" />
+        <path d="M38,8.2 A30,30 0 0,1 69.8,38" stroke="#de6c3a" strokeWidth="4" strokeLinecap="round" fill="none" />
         {/* Accent */}
-        <path d="M13,52 A26,26 0 0,1 11,44" stroke="#e8614a" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity=".8" />
+        <path d="M13,52 A26,26 0 0,1 11,44" stroke="#de6c3a" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity=".8" />
         {/* Junction dots */}
         <circle cx="38" cy="8" r="3.2" fill="#1a3a5c" />
-        <circle cx="69.8" cy="38" r="3.2" fill="#e8614a" />
+        <circle cx="69.8" cy="38" r="3.2" fill="#de6c3a" />
         <circle cx="8" cy="38" r="3.2" fill="#1a3a5c" />
         <circle cx="38" cy="70" r="3.2" fill="#1a3a5c" />
         {/* Needle */}
@@ -217,7 +217,7 @@ export function NorthCodeIcon({ size = 32, className = '' }) {
         </g>
         <defs>
           <linearGradient id="nci-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#e8614a" />
+            <stop offset="0%" stopColor="#de6c3a" />
             <stop offset="100%" stopColor="#d4553f" />
           </linearGradient>
         </defs>
