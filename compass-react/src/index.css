@@ -1284,27 +1284,6 @@ button:focus-visible,
 }
 
 /* ═══════════════════════════════════════
-   CONTENT VISIBILITY — skip rendering for
-   off-screen sections (auto-sized)
-═══════════════════════════════════════ */
-/* Paint containment — lets browser skip off-screen layout/paint work */
-#work,
-#services,
-#about,
-#faq,
-#contact {
-  contain: layout style paint;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 800px;
-}
-
-footer {
-  contain: layout style paint;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 120px;
-}
-
-/* ═══════════════════════════════════════
    PROJECT SLIDER — image carousel
 ═══════════════════════════════════════ */
 .slider {
@@ -2294,7 +2273,7 @@ footer {
 }
 
 [data-theme="dark"] .section-services {
-  background: #0a1018 !important;
+  background: #121e30 !important;
 }
 
 [data-theme="dark"] .section-contact {
@@ -3549,11 +3528,15 @@ textarea.wiz-input::-webkit-scrollbar-corner {
 
 /* ── React Bits Curved / Wavy TextLoop Ribbon ── */
 .work-section,
-#services,
-.section-services,
 .text-loop-section {
   background: #111a27 !important;
   background-color: #111a27 !important;
+}
+
+#services,
+.section-services {
+  background: #121e30 !important;
+  background-color: #121e30 !important;
 }
 
 .curved-loop-container {

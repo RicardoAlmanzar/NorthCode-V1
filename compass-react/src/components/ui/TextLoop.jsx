@@ -8,6 +8,7 @@ export default function TextLoop({
 }) {
   const pathRef = useRef(null);
   const textPathRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Single unit text block
   const unitText = text.trim() + " ✦ ";
@@ -15,12 +16,14 @@ export default function TextLoop({
   const repeatedText = unitText.repeat(12);
 
   useEffect(() => {
-    let animationFrameId;
+    let animationFrameId = 0;
     let offset = 0;
+    let isVisible = false;
     // Approximating exact character length of single unit text loop in SVG coordinates
     const singleUnitLength = unitText.length * 16.5;
 
     const animate = () => {
+      if (!isVisible) return;
       offset -= speed;
       // Seamless wrap-around modulo
       if (Math.abs(offset) >= singleUnitLength) {
@@ -32,16 +35,32 @@ export default function TextLoop({
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    const observer = new IntersectionObserver(([entry]) => {
+      const wasVisible = isVisible;
+      isVisible = entry.isIntersecting;
+      if (isVisible && !wasVisible) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else if (!isVisible && animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      }
+    }, { rootMargin: '120px 0px' });
 
-    return () => cancelAnimationFrame(animationFrameId);
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, [speed, unitText]);
 
   return (
-    <div className={`curved-loop-container ${className}`} style={style}>
+    <div ref={containerRef} className={`curved-loop-container ${className}`} style={style}>
       <svg
         viewBox="0 0 1440 140"
-        preserveAspectRatio="xMidYMid meet"
+        preserveAspectRatio="none"
         className="curved-loop-svg"
       >
         <defs>
@@ -51,6 +70,12 @@ export default function TextLoop({
             fill="none"
           />
         </defs>
+
+        {/* Fill below wavy ribbon connecting seamlessly to Services section */}
+        <path
+          d="M -1000,70 Q -640,25 -280,70 T 440,70 T 1160,70 T 1880,70 T 2600,70 T 3320,70 L 3320,200 L -1000,200 Z"
+          fill="#121e30"
+        />
 
         {/* Thick Wavy Ribbon Path (Coral Color) */}
         <path
