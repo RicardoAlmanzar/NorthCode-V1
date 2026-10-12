@@ -237,6 +237,7 @@ export default function HeroCore3D() {
     let pointerY = 0;
     let frameId = 0;
     let disposed = false;
+    let isVisible = true;
     const clock = new THREE.Clock();
 
     const resize = () => {
@@ -249,11 +250,13 @@ export default function HeroCore3D() {
     };
 
     const onPointerMove = (event) => {
+      if (!isVisible) return;
       pointerX = (event.clientX / window.innerWidth - 0.5) * 2;
       pointerY = (event.clientY / window.innerHeight - 0.5) * 2;
     };
 
     const render = () => {
+      if (!isVisible || disposed) return;
       const elapsed = clock.getElapsedTime();
       root.rotation.y += ((pointerX * 0.18) - root.rotation.y) * 0.035;
       root.rotation.x += ((-pointerY * 0.1) - root.rotation.x) * 0.035;
@@ -272,16 +275,29 @@ export default function HeroCore3D() {
       }
 
       renderer.render(scene, camera);
-      if (!disposed && !reducedMotion) frameId = window.requestAnimationFrame(render);
+      if (!disposed && !reducedMotion && isVisible) frameId = window.requestAnimationFrame(render);
     };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      const wasVisible = isVisible;
+      isVisible = entry.isIntersecting;
+      if (isVisible && !wasVisible && !disposed && !reducedMotion) {
+        frameId = window.requestAnimationFrame(render);
+      } else if (!isVisible && frameId) {
+        window.cancelAnimationFrame(frameId);
+        frameId = 0;
+      }
+    }, { rootMargin: '100px 0px' });
+    observer.observe(mount);
 
     resize();
     window.addEventListener('resize', resize);
-    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
     render();
 
     return () => {
       disposed = true;
+      observer.disconnect();
       window.cancelAnimationFrame(frameId);
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointerMove);
