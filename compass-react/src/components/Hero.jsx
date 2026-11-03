@@ -32,10 +32,10 @@ export default function Hero() {
           Creamos marcas y soluciones digitales de alto impacto. Desde identidades visuales hasta sistemas complejos que impulsan tu negocio.
         </p>
         <div className="hero-new-cta">
-          <Button href="#contact" aria-label="Solicitar cotización de proyecto">
+          <Button href="#contact">
             Cotizar proyecto
           </Button>
-          <Button variant="secondary" href="#work" aria-label="Ver nuestro portafolio">
+          <Button variant="secondary" href="#work">
             Ver portafolio
           </Button>
         </div>

@@ -1283,6 +1283,12 @@ button:focus-visible,
   }
 }
 
+@media (max-width: 339px) {
+  .primary-navbar {
+    min-width: 220px;
+  }
+}
+
 /* ═══════════════════════════════════════
    PROJECT SLIDER — image carousel
 ═══════════════════════════════════════ */
@@ -1294,6 +1300,11 @@ button:focus-visible,
   overflow: visible;
   background: transparent;
   outline: none;
+}
+
+.slider:focus-visible {
+  outline: 2px solid var(--color-coral);
+  outline-offset: 4px;
 }
 
 .slider-track {
@@ -1634,11 +1645,28 @@ button:focus-visible,
 }
 
 /* Counter */
-.slider-counter {
+.slider-meta {
   position: absolute;
   top: 12px;
   right: 12px;
   z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.slider-autoplay {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(13, 27, 42, .8);
+  color: white;
+  cursor: pointer;
+}
+
+.slider-counter {
   font-size: .7rem;
   font-weight: 600;
   letter-spacing: .05em;

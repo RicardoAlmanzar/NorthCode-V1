@@ -210,6 +210,58 @@ export const SVC_DETAIL = {
 /* ─── Projects for Work section ─── */
 export const PROJECTS = [
   {
+    title: "Umbrella News",
+    tag: "Plataforma de noticias",
+    desc: "Plataforma web para explorar noticias por categoría, consultar titulares y leer artículos en una interfaz clara y organizada.",
+    technologies: ["Next.js", "React", "Tailwind CSS"],
+    slides: [
+      { src: '/img/projects/umbrella-news/01.jpg', alt: "Portada de Umbrella News" },
+      { src: '/img/projects/umbrella-news/02.jpg', alt: "Vista de un artículo" },
+      { src: '/img/projects/umbrella-news/03.jpg', alt: "Sección de entretenimiento" },
+      { src: '/img/projects/umbrella-news/04.jpg', alt: "Resultados de búsqueda" },
+      { src: '/img/projects/umbrella-news/05.jpg', alt: "Panel de administración" },
+    ],
+  },
+  {
+    title: "Pizza Il Forno",
+    tag: "Restaurante · Diseño conceptual",
+    desc: "Rediseño conceptual para presentar el menú de un restaurante de comida italiana, con secciones dedicadas a sus platos y a la historia de la marca. Propuesta independiente, no oficial ni autorizada por Il Forno.",
+    technologies: ["Astro", "Tailwind CSS"],
+    slides: [
+      { src: '/img/projects/il-forno/01.jpg', alt: "Portada del rediseño" },
+      { src: '/img/projects/il-forno/02.jpg', alt: "Categorías del menú" },
+      { src: '/img/projects/il-forno/03.jpg', alt: "Sección sobre la historia de Il Forno" },
+      { src: '/img/projects/il-forno/04.jpg', alt: "Contenido editorial del restaurante" },
+      { src: '/img/projects/il-forno/05.jpg', alt: "Platos destacados y menú" },
+    ],
+  },
+  {
+    title: "Samuel Rent A Car",
+    tag: "Alquiler de vehículos",
+    desc: "Sitio web para explorar vehículos, consultar disponibilidad y solicitar una reserva. Incluye un panel para que el equipo revise solicitudes y gestione el inventario.",
+    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase"],
+    slides: [
+      { src: '/img/projects/samuel-rentacar/01.jpg', alt: "Portada de Samuel Rent A Car" },
+      { src: '/img/projects/samuel-rentacar/02.jpg', alt: "Selección de vehículos" },
+      { src: '/img/projects/samuel-rentacar/03.jpg', alt: "Sección sobre los valores de la empresa" },
+      { src: '/img/projects/samuel-rentacar/04.jpg', alt: "Catálogo de vehículos" },
+      { src: '/img/projects/samuel-rentacar/05.jpg', alt: "Formulario de solicitud de reserva" },
+    ],
+  },
+  {
+    title: "Shine's Creations",
+    tag: "E-commerce personalizado",
+    desc: "Tienda en línea de ropa y accesorios con diseños personalizados. Permite explorar colecciones, consultar detalles de cada producto y elegir artículos para el carrito.",
+    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Express", "Supabase"],
+    slides: [
+      { src: '/img/projects/shine-creations/01.jpg', alt: "Portada de Shine’s Creations" },
+      { src: '/img/projects/shine-creations/02.jpg', alt: "Catálogo de ropa y accesorios" },
+      { src: '/img/projects/shine-creations/03.jpg', alt: "Ficha de la camiseta Cat Vision" },
+      { src: '/img/projects/shine-creations/04.jpg', alt: "Colección destacada" },
+      { src: '/img/projects/shine-creations/05.jpg', alt: "Carrito de compra" },
+    ],
+  },
+  {
     title: 'Sistema de Gestión de Muestras',
     tag: 'Branding · Web',
     /* ≤90 chars — microcopy de alcance visible en la card */
@@ -297,6 +349,17 @@ export const PROJECTS = [
       { src: '/img/projects/sneakers/verify.jpg', alt: 'Verificación de autenticidad' },
       { src: '/img/projects/sneakers/predict.jpg', alt: 'Módulo de predicción y análisis' },
       { src: '/img/projects/sneakers/footer.jpg', alt: 'Footer — Waldykicks' },
+    ],
+  },
+  {
+    title: "Tienda de MLB",
+    tag: "E-commerce deportivo",
+    desc: "Demostración de una tienda inspirada en el béisbol, con catálogo de jerseys, fichas de producto y carrito. Es un proyecto conceptual independiente y no una tienda oficial de MLB.",
+    technologies: ["Next.js", "React", "Tailwind CSS", "Framer Motion", "NestJS", "Prisma", "PostgreSQL"],
+    slides: [
+      { src: '/img/projects/mlb-shop/01.jpg', alt: "Portada de la tienda de demostración" },
+      { src: '/img/projects/mlb-shop/02.jpg', alt: "Ficha de un jersey de Los Angeles Dodgers" },
+      { src: '/img/projects/mlb-shop/03.jpg', alt: "Catálogo de jerseys" },
     ],
   },
 ];

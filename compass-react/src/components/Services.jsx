@@ -110,6 +110,7 @@ function ServiceCard({ service, stagger }) {
 
   const svcColor = service.key === 'web' ? 'var(--color-coral)' : service.key === 'branding' ? '#7c3aed' : '#60a5fa';
   const includes = INCLUDE_ICONS[service.key] || [];
+  const detailsId = `service-details-${service.key}`;
 
   const toggleCard = () => {
     if (isTouchDevice) {
@@ -141,25 +142,27 @@ function ServiceCard({ service, stagger }) {
           if (!isTouchDevice) setIsFlipped(true);
         }}
         onMouseLeave={(e) => {
-          if (!isTouchDevice) setIsFlipped(false);
+          if (!isTouchDevice && !e.currentTarget.querySelector(':focus-visible')) setIsFlipped(false);
         }}
         onClick={toggleCard}
-        onKeyDown={(event) => {
-          if ((event.key === 'Enter' || event.key === ' ') && isTouchDevice) {
-            event.preventDefault();
-            toggleCard();
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label={`${service.name} — ver más`}
       >
+        <button
+          type="button"
+          className="pointer-events-none absolute inset-0 z-10 rounded-2xl"
+          aria-label={`${service.name} — detalles`}
+          aria-expanded={isFlipped}
+          aria-controls={detailsId}
+          onClick={(event) => {
+            event.stopPropagation();
+            setIsFlipped(value => !value);
+          }}
+        />
         <div
           className="relative w-full transition-transform duration-700 ease-[cubic-bezier(.2,.8,.2,1)]"
           style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
         >
           {/* Front */}
-          <div style={{ backfaceVisibility: 'hidden' }} className="overflow-hidden rounded-2xl border border-white/[.08] bg-gradient-to-br from-white/[.08] to-white/[.02] backdrop-blur-sm shadow-[0_12px_35px_rgba(0,0,0,.25)] transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,.4)]">
+          <div inert={isFlipped} style={{ backfaceVisibility: 'hidden' }} className="overflow-hidden rounded-2xl border border-white/[.08] bg-gradient-to-br from-white/[.08] to-white/[.02] backdrop-blur-sm shadow-[0_12px_35px_rgba(0,0,0,.25)] transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,.4)]">
             {/* Header Section with Browser Bar */}
             <div className="flex items-center gap-3 border-b border-white/[.06] bg-white/[.04] px-4 py-3">
               <BrowserDots />
@@ -206,7 +209,7 @@ function ServiceCard({ service, stagger }) {
           </div>
 
           {/* Back */}
-          <div style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }} className="absolute inset-0 overflow-hidden rounded-2xl border border-white/[.08] bg-gradient-to-br from-white/[.08] to-white/[.02] backdrop-blur-sm shadow-[0_12px_35px_rgba(0,0,0,.25)]">
+          <div id={detailsId} inert={!isFlipped} style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }} className="absolute inset-0 overflow-hidden rounded-2xl border border-white/[.08] bg-gradient-to-br from-white/[.08] to-white/[.02] backdrop-blur-sm shadow-[0_12px_35px_rgba(0,0,0,.25)]">
             {/* Header Section with Browser Bar */}
             <div className="flex items-center gap-3 border-b border-white/[.06] bg-white/[.04] px-4 py-3">
               <BrowserDots />

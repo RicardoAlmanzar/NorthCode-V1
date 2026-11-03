@@ -77,7 +77,7 @@ export default function Navbar() {
     <>
       <nav
         ref={navRef}
-        className={`fixed top-4 left-1/2 z-[100] -translate-x-1/2 w-[min(56vw,620px)] max-w-[620px] px-3 py-2 md:px-4 md:py-3 border border-white/10 rounded-full bg-slate-950/45 shadow-[0_18px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl transition duration-300 ${scrolled ? 'bg-slate-950/65 shadow-[0_18px_70px_rgba(0,0,0,0.24)] border-white/15' : 'bg-slate-950/45'}`}
+        className={`primary-navbar fixed top-4 left-1/2 z-[100] -translate-x-1/2 w-[min(56vw,620px)] max-w-[620px] px-3 py-2 md:px-4 md:py-3 border border-white/10 rounded-full bg-slate-950/45 shadow-[0_18px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl transition duration-300 ${scrolled ? 'bg-slate-950/65 shadow-[0_18px_70px_rgba(0,0,0,0.24)] border-white/15' : 'bg-slate-950/45'}`}
         aria-label="Navegación principal"
       >
         <div className="grid w-full grid-cols-[auto_1fr_auto] items-center gap-4">

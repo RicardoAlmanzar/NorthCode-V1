@@ -4,9 +4,13 @@ import { useScrollRevealAll, useInView } from '../hooks/useScrollReveal';
 import { SectionEyebrow } from './ui/Icons';
 
 /* â”€â”€â”€ Image Slider â”€â”€â”€ */
-function ProjectSlider({ slides, mobile, priority = false }) {
+function ProjectSlider({ slides, mobile, title, priority = false }) {
   const [current, setCurrent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [playing, setPlaying] = useState(
+    () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+  const [hovered, setHovered] = useState(false);
   const touchStart = useRef(null);
   const total = slides.length;
 
@@ -14,19 +18,32 @@ function ProjectSlider({ slides, mobile, priority = false }) {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrent((idx + total) % total);
-    setTimeout(() => setIsTransitioning(false), 420);
   }, [total, isTransitioning]);
+
+  useEffect(() => {
+    if (!isTransitioning) return;
+    const timer = setTimeout(() => setIsTransitioning(false), 420);
+    return () => clearTimeout(timer);
+  }, [isTransitioning]);
 
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
 
-  /* Auto-advance */
   const [sliderRef, sliderInView] = useInView();
+  const rotating = playing && !hovered && sliderInView && total > 1;
+
   useEffect(() => {
-    if (!sliderInView) return;
-    const timer = setInterval(() => goTo(current + 1), 5000);
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = (event) => { if (event.matches) setPlaying(false); };
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (!rotating) return;
+    const timer = setInterval(next, 5000);
     return () => clearInterval(timer);
-  }, [current, goTo, sliderInView]);
+  }, [next, rotating]);
 
   /* Swipe support */
   const onTouchStart = e => { touchStart.current = e.touches[0].clientX; };
@@ -39,9 +56,46 @@ function ProjectSlider({ slides, mobile, priority = false }) {
 
   /* Keyboard */
   const onKey = e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    setPlaying(false);
     if (e.key === 'ArrowLeft') prev();
-    if (e.key === 'ArrowRight') next();
+    else next();
   };
+
+  const sliderAccessibility = {
+    role: 'group',
+    'aria-roledescription': 'carrusel',
+    'aria-label': `Capturas de ${title}`,
+    tabIndex: 0,
+    onPointerEnter: (event) => { if (event.pointerType === 'mouse') setHovered(true); },
+    onPointerLeave: () => setHovered(false),
+    onFocus: (event) => {
+      if (event.target.matches(':focus-visible') && !event.currentTarget.contains(event.relatedTarget)) {
+        setPlaying(false);
+      }
+    },
+  };
+
+  const counter = (
+    <div className="slider-meta">
+      {total > 1 && (
+        <button
+          type="button"
+          className="slider-autoplay"
+          aria-label={playing ? 'Pausar avance automático' : 'Reproducir avance automático'}
+          onClick={() => setPlaying(value => !value)}
+        >
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+            {playing ? <path d="M4 3h3v10H4zm5 0h3v10H9z" /> : <path d="m5 3 8 5-8 5z" />}
+          </svg>
+        </button>
+      )}
+      <span className="slider-counter" aria-live={rotating ? 'off' : 'polite'} aria-atomic="true">
+        {current + 1} / {total}
+      </span>
+    </div>
+  );
 
   if (mobile) {
     return (
@@ -51,14 +105,14 @@ function ProjectSlider({ slides, mobile, priority = false }) {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onKeyDown={onKey}
-        tabIndex={0}
+        {...sliderAccessibility}
       >
         <div className="phone-frame shadow-lg">
           <div className="phone-notch" />
           <div className="phone-screen">
             <div className="slider-track" style={{ transform: `translateX(-${current * 100}%)` }}>
               {slides.map((slide, i) => (
-                <div key={i} className="slider-slide">
+                <div key={i} className="slider-slide" aria-hidden={i !== current}>
                   <img
                     src={slide.src}
                     alt={slide.alt}
@@ -84,11 +138,11 @@ function ProjectSlider({ slides, mobile, priority = false }) {
         {/* Dots */}
         <div className="slider-dots">
           {slides.map((_, i) => (
-            <button key={i} className={`slider-dot ${i === current ? 'slider-dot--active' : ''}`} onClick={() => goTo(i)} aria-label={`Imagen ${i + 1}`} />
+            <button key={i} className={`slider-dot ${i === current ? 'slider-dot--active' : ''}`} onClick={() => goTo(i)} aria-label={`Imagen ${i + 1}`} aria-current={i === current ? 'true' : undefined} />
           ))}
         </div>
 
-        <span className="slider-counter">{current + 1} / {total}</span>
+        {counter}
       </div>
     );
   }
@@ -100,14 +154,14 @@ function ProjectSlider({ slides, mobile, priority = false }) {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       onKeyDown={onKey}
-      tabIndex={0}
+      {...sliderAccessibility}
     >
       <div className="laptop-frame shadow-2xl">
         <div className="laptop-camera" />
         <div className="laptop-screen">
           <div className="slider-track" style={{ transform: `translateX(-${current * 100}%)` }}>
             {slides.map((slide, i) => (
-              <div key={i} className="slider-slide">
+              <div key={i} className="slider-slide" aria-hidden={i !== current}>
                 <img
                   src={slide.src}
                   alt={slide.alt}
@@ -134,11 +188,11 @@ function ProjectSlider({ slides, mobile, priority = false }) {
       {/* Dots */}
       <div className="slider-dots">
         {slides.map((_, i) => (
-          <button key={i} className={`slider-dot ${i === current ? 'slider-dot--active' : ''}`} onClick={() => goTo(i)} aria-label={`Imagen ${i + 1}`} />
+          <button key={i} className={`slider-dot ${i === current ? 'slider-dot--active' : ''}`} onClick={() => goTo(i)} aria-label={`Imagen ${i + 1}`} aria-current={i === current ? 'true' : undefined} />
         ))}
       </div>
 
-      <span className="slider-counter">{current + 1} / {total}</span>
+      {counter}
     </div>
   );
 }
@@ -154,7 +208,7 @@ function ProjectCard({ project, index }) {
         <div className="w-full lg:flex-1 flex items-center justify-center">
           {project.slides && project.slides.length > 0 ? (
             <div className="w-full max-w-[620px]">
-              <ProjectSlider slides={project.slides} mobile={project.slidesMobile} priority={index === 0} />
+              <ProjectSlider title={project.title} slides={project.slides} mobile={project.slidesMobile} priority={index === 0} />
             </div>
           ) : (
             <div className="w-full aspect-video max-w-[500px] rounded-xl overflow-hidden" style={{ background: project.gradientDark }} />
@@ -200,34 +254,84 @@ function ProjectCard({ project, index }) {
 }
 
 /* â”€â”€â”€ Work Section â”€â”€â”€ */
+const PROJECTS_PER_PAGE = 4;
+const PAGE_COUNT = Math.ceil(PROJECTS.length / PROJECTS_PER_PAGE);
+
+function ProjectPage({ page }) {
+  const listRef = useRef(null);
+  useScrollRevealAll(listRef, '.reveal');
+  const start = page * PROJECTS_PER_PAGE;
+  const projects = PROJECTS.slice(start, start + PROJECTS_PER_PAGE);
+
+  return (
+    <div ref={listRef} className="space-y-32 max-lg:space-y-20 max-w-[1400px] mx-auto">
+      {projects.map((project, index) => (
+        <ProjectCard key={project.title} project={project} index={index} />
+      ))}
+    </div>
+  );
+}
+
+const pageArrowClass = 'inline-flex size-12 items-center justify-center rounded-full bg-[var(--color-coral)] text-white shadow-[0_4px_16px_rgba(222,108,58,.30)] transition-colors hover:bg-[#d1533f]';
+
 export default function Work() {
-  const containerRef = useRef(null);
-  useScrollRevealAll(containerRef, '.reveal');
+  const [page, setPage] = useState(0);
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const headingRef = useRef(null);
+  useScrollRevealAll(headerRef, '.reveal');
+
+  function goToPage(nextPage) {
+    setPage(nextPage);
+    headingRef.current?.focus({ preventScroll: true });
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    sectionRef.current?.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'instant' : 'smooth' });
+  }
 
   return (
     <section
       id="work"
-      ref={containerRef}
+      ref={sectionRef}
       aria-labelledby="work-heading"
       className="work-section px-16 max-lg:px-8 max-md:px-5 py-24 max-lg:py-20"
     >
-      <div className="mb-20 max-lg:mb-16 text-center lg:text-left">
+      <div ref={headerRef} className="mb-20 max-lg:mb-16 text-center lg:text-left">
         <SectionEyebrow className="reveal text-[var(--color-coral-lt)] before:bg-[var(--color-coral-lt)]">
           Trabajos recientes
         </SectionEyebrow>
         <h2
           id="work-heading"
+          ref={headingRef}
+          tabIndex={-1}
           className="font-heading font-black leading-[1.15] text-[clamp(2rem,4vw,3.2rem)] text-white mt-4"
         >
           Nuestros <em className="italic text-[var(--color-coral)]">trabajos</em>
         </h2>
       </div>
 
-      <div className="space-y-32 max-lg:space-y-20 max-w-[1400px] mx-auto">
-        {PROJECTS.map((proj, idx) => (
-          <ProjectCard key={idx} project={proj} index={idx} />
-        ))}
-      </div>
+      <ProjectPage key={page} page={page} />
+
+      {PAGE_COUNT > 1 && (
+        <nav aria-label="Páginas del portafolio" className="mt-16 flex items-center justify-center gap-5 max-lg:mt-12">
+          {page > 0 && (
+            <button type="button" className={pageArrowClass} onClick={() => goToPage(page - 1)} aria-label="Página anterior">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M13 4l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
+          <span role="status" className="text-sm font-semibold text-white/70">
+            Página {page + 1} de {PAGE_COUNT}
+          </span>
+          {page < PAGE_COUNT - 1 && (
+            <button type="button" className={pageArrowClass} onClick={() => goToPage(page + 1)} aria-label="Página siguiente">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M7 4l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
+        </nav>
+      )}
     </section>
   );
 }

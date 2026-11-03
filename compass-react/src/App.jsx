@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -16,6 +16,23 @@ import FormToast from './components/FormToast';
 export default function App() {
   const [toast, setToast] = useState('');
   const clearToast = useCallback(() => setToast(''), []);
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!['#work', '#services', '#contact'].includes(hash)) return;
+    const frame = requestAnimationFrame(() => {
+      if (window.location.hash !== hash) return;
+      const section = document.getElementById(hash.slice(1));
+      if (!section) return;
+      const navBottom = document.querySelector('.primary-navbar')?.getBoundingClientRect().bottom ?? 0;
+      const offset = Math.max(80, Math.ceil(navBottom) + 12);
+      window.scrollTo({
+        top: window.scrollY + section.getBoundingClientRect().top - offset,
+        behavior: 'instant',
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
     <ThemeProvider>
