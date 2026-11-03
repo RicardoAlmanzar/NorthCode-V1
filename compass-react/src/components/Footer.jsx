@@ -47,7 +47,7 @@ export default function Footer() {
   return (
     <footer className="bg-[var(--color-cream)] dark:bg-[#0d1b2a] text-[var(--color-muted)] dark:text-white/70 px-8 md:px-16 py-12 section-footer border-t border-[var(--color-border)]">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-10 text-center md:flex-row md:items-start md:justify-between md:text-left">
-        <a href="#hero" className="flex items-center justify-center gap-3 no-underline transition-opacity duration-300 hover:opacity-80 md:justify-start" aria-label="Volver al inicio">
+        <a href="#hero" className="flex items-center justify-center gap-3 no-underline transition-opacity duration-300 hover:opacity-80 md:justify-start" aria-label="NorthCode — Volver al inicio">
           <img src="/favicon.png" alt="NorthCode favicon" width="56" height="56" className="h-14 w-14 rounded-md object-contain" />
           <span className="text-sm font-semibold text-[var(--color-foreground)] dark:text-white">NorthCode</span>
         </a>
@@ -117,7 +117,7 @@ export default function Footer() {
               {[
                 { href: 'https://www.instagram.com/northcode.rd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==', type: 'instagram', label: 'Instagram' },
                 { href: 'https://www.tiktok.com/@northcoderd', type: 'tiktok', label: 'TikTok' },
-                { href: 'https://github.com/', type: 'github', label: 'GitHub' },
+                { href: 'https://github.com/RicardoAlmanzar/NorthCode-V1', type: 'github', label: 'GitHub' },
               ].map(item => (
                 <li key={item.type} className="footer-social-item">
                   <a
@@ -139,7 +139,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mt-10 text-center text-xs opacity-50">© 2026 NorthCode</div>
+      <div className="mt-10 text-center text-xs opacity-70">© 2026 NorthCode</div>
     </footer>
   );
 }

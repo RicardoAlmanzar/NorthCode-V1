@@ -82,6 +82,7 @@ export default function ChatBot() {
   const panelRef = useFocusTrap(open);
   const scrollRef = useRef(null);
   const closeBtnRef = useRef(null);
+  const triggerRef = useRef(null);
 
   // Autoscroll to last message
   useEffect(() => {
@@ -90,14 +91,16 @@ export default function ChatBot() {
     }
   }, [messages, view]);
 
-  // Focus close button on open
+  // Move focus into the dialog and restore it on close.
   useEffect(() => {
-    if (open) {
-      document.body.style.setProperty('--chatbot-open', '1');
-      requestAnimationFrame(() => closeBtnRef.current?.focus());
-    } else {
+    if (!open) return;
+    document.body.style.setProperty('--chatbot-open', '1');
+    const frame = requestAnimationFrame(() => closeBtnRef.current?.focus());
+    return () => {
+      cancelAnimationFrame(frame);
       document.body.style.removeProperty('--chatbot-open');
-    }
+      triggerRef.current?.focus({ preventScroll: true });
+    };
   }, [open]);
 
   // Escape to close
@@ -173,6 +176,7 @@ export default function ChatBot() {
     <>
       {/* ── Floating Bubble ── */}
       <button
+        ref={triggerRef}
         onClick={() => setOpen(true)}
         className={`chatbot-fab fixed z-[95] bottom-6 right-6 max-md:bottom-5 max-md:right-5 w-12 h-12 md:w-14 md:h-14 ${open ? 'chatbot-fab-hidden' : ''}`}
         aria-label="Abrir chat de asistencia"
@@ -186,6 +190,8 @@ export default function ChatBot() {
       <div
         className={`chatbot-overlay ${open ? 'chatbot-overlay-visible' : ''}`}
         onClick={handleOverlayClick}
+        inert={!open}
+        aria-hidden={!open}
       >
         <div
           ref={panelRef}
